@@ -24,13 +24,6 @@
 			window.removeEventListener('scroll', handleScroll);
 		};
 	});
-
-	// For a real implementation, you would add form submission logic
-	const handleSubmit = (e: Event) => {
-		e.preventDefault();
-		// Process form submission
-		alert("Thanks for your interest! We'll contact you soon.");
-	};
 </script>
 
 <div class="min-h-screen bg-amber-50">

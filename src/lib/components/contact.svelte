@@ -1,13 +1,9 @@
 <script lang="ts">
 	import * as Select from '$lib/components/ui/select/index.js';
-
-	const fruits = [
-		{ value: 'appetizer', label: 'Appetizer - $499/mo' },
-		{ value: 'main-course', label: 'Main Course - $899/mo' },
-		{ value: 'full-menu', label: 'Full Menu - $1499/mo' },
-		{ value: 'custom', label: 'Custom Solution' }
-	];
+	import { siteContent } from '$lib/data/site-content';
 	import { onMount } from 'svelte';
+
+	const { contact } = siteContent;
 
 	// You can add interactive functionality here
 	let isScrolled = false;
@@ -37,8 +33,8 @@
 <section id="contact" class="bg-amber-50 py-24">
 	<div class="mx-auto max-w-7xl px-4 md:px-6 lg:px-8">
 		<div class="mb-16 text-center">
-			<h2 class="text-4xl font-extrabold">Ready to Get Started?</h2>
-			<p class="mt-4 text-xl">Fill out the form below and we'll be in touch within 24 hours</p>
+			<h2 class="text-4xl font-extrabold">{contact.title}</h2>
+			<p class="mt-4 text-xl">{contact.subtitle}</p>
 		</div>
 
 		<div class="mx-auto max-w-2xl">
@@ -80,18 +76,20 @@
 						<label for="package" class="mb-2 block font-bold">Interested In</label>
 
 						<Select.Root portal={null}>
-							<Select.Trigger class="w-full  focus:outline-none focus:ring-2 focus:ring-red-500">
+							<Select.Trigger class="w-full focus:outline-none focus:ring-2 focus:ring-red-500">
 								<Select.Value placeholder="Select a package to discuss during our call" />
 							</Select.Trigger>
 							<Select.Content>
 								<Select.Group>
-									<Select.Label>Fruits</Select.Label>
-									{#each fruits as fruit}
-										<Select.Item value={fruit.value} label={fruit.label}>{fruit.label}</Select.Item>
+									<Select.Label>Packages</Select.Label>
+									{#each contact.packageOptions as option}
+										<Select.Item value={option.value} label={option.label}
+											>{option.label}</Select.Item
+										>
 									{/each}
 								</Select.Group>
 							</Select.Content>
-							<Select.Input name="favoriteFruit" />
+							<Select.Input name="package" />
 						</Select.Root>
 					</div>
 					<div class="mb-6">
@@ -108,7 +106,7 @@
 						type="submit"
 						class="w-full rounded-lg border-2 border-black bg-red-500 px-8 py-4 font-bold text-white shadow-[4px_4px_0px_0px_rgba(0,0,0,1)] transition-all hover:translate-x-[2px] hover:translate-y-[2px] hover:shadow-[2px_2px_0px_0px_rgba(0,0,0,1)]"
 					>
-						Let's Cook Up Some Ads!
+						{contact.submitButtonText}
 					</button>
 				</form>
 			</div>
