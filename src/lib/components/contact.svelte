@@ -1,5 +1,12 @@
 <script lang="ts">
-	import Footer from '@/lib/components/footer.svelte';
+	import * as Select from '$lib/components/ui/select/index.js';
+
+	const fruits = [
+		{ value: 'appetizer', label: 'Appetizer - $499/mo' },
+		{ value: 'main-course', label: 'Main Course - $899/mo' },
+		{ value: 'full-menu', label: 'Full Menu - $1499/mo' },
+		{ value: 'custom', label: 'Custom Solution' }
+	];
 	import { onMount } from 'svelte';
 
 	// You can add interactive functionality here
@@ -71,17 +78,21 @@
 					</div>
 					<div class="mb-6">
 						<label for="package" class="mb-2 block font-bold">Interested In</label>
-						<select
-							id="package"
-							required
-							class="w-full rounded-lg border-2 border-black p-3 focus:outline-none focus:ring-2 focus:ring-red-500"
-						>
-							<option value="" disabled selected>Select a package</option>
-							<option value="appetizer">Appetizer - $499/mo</option>
-							<option value="main-course">Main Course - $899/mo</option>
-							<option value="full-menu">Full Menu - $1499/mo</option>
-							<option value="custom">Custom Solution</option>
-						</select>
+
+						<Select.Root portal={null}>
+							<Select.Trigger class="w-full  focus:outline-none focus:ring-2 focus:ring-red-500">
+								<Select.Value placeholder="Select a package to discuss during our call" />
+							</Select.Trigger>
+							<Select.Content>
+								<Select.Group>
+									<Select.Label>Fruits</Select.Label>
+									{#each fruits as fruit}
+										<Select.Item value={fruit.value} label={fruit.label}>{fruit.label}</Select.Item>
+									{/each}
+								</Select.Group>
+							</Select.Content>
+							<Select.Input name="favoriteFruit" />
+						</Select.Root>
 					</div>
 					<div class="mb-6">
 						<label for="message" class="mb-2 block font-bold">Tell Us About Your Restaurant</label>

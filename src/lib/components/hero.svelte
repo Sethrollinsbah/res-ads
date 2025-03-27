@@ -7,7 +7,7 @@
 	<nav
 		class="{isScrolled
 			? 'fixed left-0 right-0 top-0 z-50 border-b-2 border-black bg-white px-4 py-4 shadow-md md:px-6 lg:px-8'
-			: ''} mx-auto flex max-w-7xl items-center justify-between py-6 transition-all duration-300"
+			: ''} mx-auto flex items-center justify-between py-6 transition-all duration-300"
 	>
 		<div class="flex items-center gap-3">
 			<div
