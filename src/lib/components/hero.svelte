@@ -1,4 +1,6 @@
 <script lang="ts">
+	import Logo from './logo.svelte';
+
 	let { isScrolled } = $props();
 </script>
 
@@ -10,11 +12,7 @@
 			: ''} mx-auto flex items-center justify-between py-6 transition-all duration-300"
 	>
 		<div class="flex items-center gap-3">
-			<div
-				class="rounded-lg border-2 border-black bg-red-500 p-3 shadow-[4px_4px_0px_0px_rgba(0,0,0,1)]"
-			>
-				<span class="text-xl font-bold text-white">FoodieAds</span>
-			</div>
+			<Logo></Logo>
 		</div>
 		<div class="hidden items-center gap-8 md:flex">
 			<a href="#features" class="font-bold transition-colors hover:text-red-500">Features</a>

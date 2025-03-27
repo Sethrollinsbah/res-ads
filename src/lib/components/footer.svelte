@@ -1,4 +1,6 @@
 <script lang="ts">
+	import Logo from './logo.svelte';
+
 	// Footer component
 </script>
 
@@ -7,11 +9,7 @@
 	<div class="mx-auto max-w-7xl px-4 md:px-6 lg:px-8">
 		<div class="grid gap-12 md:grid-cols-4">
 			<div>
-				<div
-					class="mb-4 inline-block rounded-lg border-2 border-white bg-red-500 p-3 shadow-[4px_4px_0px_0px_rgba(255,255,255,0.2)]"
-				>
-					<span class="text-xl font-bold text-white">FoodieAds</span>
-				</div>
+				<Logo></Logo>
 				<p class="mt-4 text-gray-400">
 					Helping restaurants attract more customers with delicious advertising that works.
 				</p>
