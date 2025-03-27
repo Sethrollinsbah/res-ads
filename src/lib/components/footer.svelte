@@ -17,12 +17,12 @@
 				</p>
 			</div>
 			<div>
-				<h3 class="mb-4 text-xl font-bold">Company</h3>
+				<h3 class="mb-4 text-xl font-bold">Services</h3>
 				<ul class="space-y-2">
-					<li><a href="#" class="text-gray-400 hover:text-white">About Us</a></li>
-					<li><a href="#" class="text-gray-400 hover:text-white">Team</a></li>
-					<li><a href="#" class="text-gray-400 hover:text-white">Careers</a></li>
-					<li><a href="#" class="text-gray-400 hover:text-white">Blog</a></li>
+					<li><a href="#features" class="text-gray-400 hover:text-white">Features</a></li>
+					<li><a href="#howItWorks" class="text-gray-400 hover:text-white">How It Works</a></li>
+					<li><a href="#pricing" class="text-gray-400 hover:text-white">Pricing</a></li>
+					<li><a href="#testimonials" class="text-gray-400 hover:text-white">Testimonials</a></li>
 				</ul>
 			</div>
 			<div>
