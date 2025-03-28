@@ -96,52 +96,71 @@ export const siteContent = {
   
   // Pricing Section
   pricing: {
-    title: 'Pricing Plans',
-    subtitle: 'Affordable options to fit any restaurant\'s budget',
-    plans: [
-      {
-        name: 'Appetizer',
-        badge: 'STARTER',
-        price: '$499',
-        period: '/mo',
-        features: [
-          '2 social media platforms',
-          '8 custom ad designs/month',
-          'Basic audience targeting',
-          'Monthly performance reports'
-        ],
-        isPopular: false
-      },
-      {
-        name: 'Main Course',
-        badge: 'POPULAR',
-        price: '$899',
-        period: '/mo',
-        features: [
-          '4 social media platforms',
-          '15 custom ad designs/month',
-          'Advanced audience targeting',
-          'Weekly performance reports',
-          'Email marketing campaigns'
-        ],
-        isPopular: true
-      },
-      {
-        name: 'Full Menu',
-        badge: 'PREMIUM',
-        price: '$1499',
-        period: '/mo',
-        features: [
-          'All social platforms + Google Ads',
-          'Unlimited ad designs',
-          'Premium audience targeting',
-          'Real-time performance dashboard',
-          'Dedicated account manager'
-        ],
-        isPopular: false
-      }
-    ]
-  },
+		title: 'Transparent CPM Pricing',
+		subtitle: 'Get more bang for your buck with our impression-based pricing',
+		plans: [
+			{
+				id: 'local',
+				name: 'Local Reach',
+				badge: 'STARTER',
+				price: '$12.50',
+				cpmValue: 12.5,
+				period: 'CPM',
+				details: 'Starting at $499/mo',
+				minBudget: 499,
+				features: [
+					'Targeted local audience',
+					'Neighborhood geofencing',
+					'Mobile-optimized ads',
+					'Weekly performance reports',
+					'~40,000 monthly impressions'
+				],
+				impressions: 40000,
+				savings: 'Save up to 35% vs traditional platforms',
+				isPopular: false
+			},
+			{
+				id: 'regional',
+				name: 'Regional Impact',
+				badge: 'POPULAR',
+				price: '$11.25',
+				cpmValue: 11.25,
+				period: 'CPM',
+				details: 'Starting at $899/mo',
+				minBudget: 899,
+				features: [
+					'Wider geo-targeting options',
+					'Cross-platform campaign distribution',
+					'Custom audience segments',
+					'Advanced performance dashboard',
+					'~80,000 monthly impressions'
+				],
+				impressions: 80000,
+				savings: 'Save up to 45% vs traditional platforms',
+				isPopular: true
+			},
+			{
+				id: 'maximum',
+				name: 'Maximum Exposure',
+				badge: 'PREMIUM',
+				price: '$9.99',
+				cpmValue: 9.99,
+				period: 'CPM',
+				details: 'Starting at $1,499/mo',
+				minBudget: 1499,
+				features: [
+					'Multi-location targeting',
+					'Premium placement inventory',
+					'Competitor conquest targeting',
+					'Full-service campaign management',
+					'~150,000 monthly impressions'
+				],
+				impressions: 150000,
+				savings: 'Save up to 55% vs traditional platforms',
+				isPopular: false
+			}
+		]
+	},
   
   // Testimonials Section
   testimonials: {
