@@ -211,15 +211,15 @@ export const siteContent = {
           { text: 'Testimonials', href: '#testimonials' }
         ]
       },
-      {
-        title: 'Resources',
-        links: [
-          { text: 'Case Studies', href: '#' },
-          { text: 'Marketing Tips', href: '#' },
-          { text: 'Industry Reports', href: '#' },
-          { text: 'Help Center', href: '#' }
-        ]
-      }
+      // {
+      //   title: 'Resources',
+      //   links: [
+      //     { text: 'Case Studies', href: '#' },
+      //     { text: 'Marketing Tips', href: '#' },
+      //     { text: 'Industry Reports', href: '#' },
+      //     { text: 'Help Center', href: '#' }
+      //   ]
+      // }
     ],
     contact: {
       title: 'Contact',

@@ -24,7 +24,7 @@
 <!-- Footer -->
 <footer class="border-t-4 border-black bg-black py-16 text-white">
 	<div class="mx-auto max-w-7xl px-4 md:px-6 lg:px-8">
-		<div class="grid gap-12 md:grid-cols-4">
+		<div class="grid gap-12 md:grid-cols-3">
 			<div>
 				<Logo></Logo>
 				<p class="mt-4 text-gray-400">
