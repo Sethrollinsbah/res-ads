@@ -166,7 +166,7 @@
 			<SettingsPanel settings={campaignSettings} on:update={handleSettingsUpdate} />
 		</div>
 
-		<!-- Chat Interface Section -->
+		<!-- Chat Interface Section - Fixed height with proper scrolling -->
 		<div class="flex w-full flex-col md:w-1/2">
 			<ChatInterface on:conversationUpdate={handleConversationUpdate}>
 				<svelte:fragment slot="header-actions">

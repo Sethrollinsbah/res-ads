@@ -130,7 +130,7 @@
 	});
 </script>
 
-<div class="flex w-full flex-col bg-white">
+<div class="flex h-full flex-col bg-white">
 	<div class="flex items-center justify-between border-b border-gray-200 bg-white px-4 py-2">
 		<h2 class="text-lg font-semibold">AI Campaign Assistant</h2>
 		<slot name="header-actions"></slot>
