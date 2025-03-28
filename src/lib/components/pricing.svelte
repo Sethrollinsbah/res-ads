@@ -2,9 +2,76 @@
 	import { siteContent } from '$lib/data/site-content';
 	import { onMount } from 'svelte';
 
-	// Modify this to use CPM pricing instead of monthly subscription
-	const pricing = siteContent;
-	const pricingData = pricing;
+	// Get the pricing data from site content
+	const { pricing } = siteContent;
+
+	// Custom pricing data with CPM values
+	const pricingData = {
+		title: 'Transparent CPM Pricing',
+		subtitle: 'Get more bang for your buck with our impression-based pricing',
+		plans: [
+			{
+				id: 'local',
+				name: 'Local Reach',
+				badge: 'STARTER',
+				price: '$12.50',
+				cpmValue: 12.5,
+				period: 'CPM',
+				details: 'Starting at $499/mo',
+				minBudget: 499,
+				features: [
+					'Targeted local audience',
+					'Neighborhood geofencing',
+					'Mobile-optimized ads',
+					'Weekly performance reports',
+					'~40,000 monthly impressions'
+				],
+				impressions: 40000,
+				savings: 'Save up to 35% vs traditional platforms',
+				isPopular: false
+			},
+			{
+				id: 'regional',
+				name: 'Regional Impact',
+				badge: 'POPULAR',
+				price: '$11.25',
+				cpmValue: 11.25,
+				period: 'CPM',
+				details: 'Starting at $899/mo',
+				minBudget: 899,
+				features: [
+					'Wider geo-targeting options',
+					'Cross-platform campaign distribution',
+					'Custom audience segments',
+					'Advanced performance dashboard',
+					'~80,000 monthly impressions'
+				],
+				impressions: 80000,
+				savings: 'Save up to 45% vs traditional platforms',
+				isPopular: true
+			},
+			{
+				id: 'maximum',
+				name: 'Maximum Exposure',
+				badge: 'PREMIUM',
+				price: '$9.99',
+				cpmValue: 9.99,
+				period: 'CPM',
+				details: 'Starting at $1,499/mo',
+				minBudget: 1499,
+				features: [
+					'Multi-location targeting',
+					'Premium placement inventory',
+					'Competitor conquest targeting',
+					'Full-service campaign management',
+					'~150,000 monthly impressions'
+				],
+				impressions: 150000,
+				savings: 'Save up to 55% vs traditional platforms',
+				isPopular: false
+			}
+		]
+	};
 
 	// Budget calculator state
 	let currentBudget = 750;
