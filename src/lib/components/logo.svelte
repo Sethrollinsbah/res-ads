@@ -1,6 +1,10 @@
+<script>
+	let { scale = 'scale-100' } = $props();
+</script>
+
 <svg
 	xmlns="http://www.w3.org/2000/svg"
-	class="h-fit max-h-16 w-fit max-w-40"
+	class={'h-fit max-h-16 w-fit max-w-40' + scale}
 	viewBox="0 0 285 104"
 	fill="none"
 >
