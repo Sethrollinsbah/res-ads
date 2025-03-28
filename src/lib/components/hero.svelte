@@ -9,7 +9,7 @@
 	const { hero, nav } = siteContent;
 
 	// Initialize the scroll handler
-	let handleNavClick: (e: MouseEvent) => void;
+	let handleNavClick = $state<(e: MouseEvent) => void | undefined>(undefined);
 
 	onMount(() => {
 		// Create a handler with 70px offset to account for the sticky header
@@ -28,7 +28,7 @@
 			<a
 				href={'#main'}
 				class="font-bold transition-colors hover:text-red-500"
-				on:click={handleNavClick}
+				onclick={handleNavClick}
 			>
 				<Logo></Logo>
 			</a>
@@ -38,7 +38,7 @@
 				<a
 					href={link.href}
 					class="font-bold transition-colors hover:text-red-500"
-					on:click={handleNavClick}
+					onclick={handleNavClick}
 				>
 					{link.text}
 				</a>
@@ -48,7 +48,7 @@
 			<a
 				href={nav.ctaButton.href}
 				class="rounded-lg border-2 border-black bg-black px-6 py-3 font-bold text-white shadow-[4px_4px_0px_0px_rgba(239,68,68,1)] transition-all hover:translate-x-[2px] hover:translate-y-[2px] hover:shadow-[2px_2px_0px_0px_rgba(239,68,68,1)]"
-				on:click={handleNavClick}
+				onclick={handleNavClick}
 			>
 				{nav.ctaButton.text}
 			</a>
@@ -74,14 +74,14 @@
 					<a
 						href="#contact"
 						class="rounded-lg border-2 border-black bg-red-500 px-8 py-4 font-bold text-white shadow-[4px_4px_0px_0px_rgba(0,0,0,1)] transition-all hover:translate-x-[2px] hover:translate-y-[2px] hover:shadow-[2px_2px_0px_0px_rgba(0,0,0,1)]"
-						on:click={handleNavClick}
+						onclick={handleNavClick}
 					>
 						{hero.cta.primary}
 					</a>
 					<a
 						href="#howItWorks"
 						class="rounded-lg border-2 border-black bg-white px-8 py-4 font-bold text-black shadow-[4px_4px_0px_0px_rgba(239,68,68,1)] transition-all hover:translate-x-[2px] hover:translate-y-[2px] hover:shadow-[2px_2px_0px_0px_rgba(239,68,68,1)]"
-						on:click={handleNavClick}
+						onclick={handleNavClick}
 					>
 						{hero.cta.secondary}
 					</a>

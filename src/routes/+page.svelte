@@ -16,7 +16,7 @@
 	const { hero } = siteContent;
 
 	// You can add interactive functionality here
-	let isScrolled = false;
+	let isScrolled = $state(false);
 
 	// Handle scroll for sticky header effect
 	onMount(() => {

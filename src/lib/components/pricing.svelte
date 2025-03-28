@@ -1,28 +1,33 @@
 <script lang="ts">
 	import { onMount } from 'svelte';
 	import { createSmoothScrollHandler } from '@/lib/utils/scroll';
-	import { siteContent } from '../data/site-content';
-	let handleNavClick: (e: MouseEvent) => void;
+	import { siteContent } from '$lib/data/site-content';
+
+	// Custom pricing data with CPM values
+	const { pricingData: pricingData } = siteContent;
+
+	// Budget calculator state
+	let currentBudget = $state(750);
+	let recommendedPlan = $state('');
+	let estimatedImpressions = $state(0);
+	let calculatorVisible = $state(false);
+	let calculatorResult = $state(false);
+	let highlightedPlan = $state('');
+
+	// Initialize smooth scroll handler
+	let handleNavClick = $state<(e: MouseEvent) => void | undefined>(undefined);
 
 	onMount(() => {
 		// Create a handler with 100px offset to account for the sticky header
 		handleNavClick = createSmoothScrollHandler(100);
 	});
-	// Custom pricing data with CPM values
-	const pricingData = siteContent.pricingData;
-
-	// Budget calculator state
-	let currentBudget = 750;
-	let recommendedPlan = '';
-	let estimatedImpressions = 0;
-	let calculatorVisible = false;
-	let calculatorResult = false;
 
 	// Calculate recommended plan based on current budget
 	function calculateRecommendation() {
 		if (currentBudget < pricingData.plans[0].minBudget) {
 			recommendedPlan = 'custom'; // Budget too low for standard plans
 			estimatedImpressions = Math.floor((currentBudget / pricingData.plans[0].cpmValue) * 1000);
+			calculatorResult = true;
 			return;
 		}
 
@@ -48,16 +53,14 @@
 		}
 	}
 
-	let highlightedPlan = '';
-
-	$: {
-		// Automatically highlight recommended plan when result is shown
+	// Update highlighted plan when calculator result changes
+	$effect(() => {
 		if (calculatorResult) {
 			highlightedPlan = recommendedPlan;
 		} else {
 			highlightedPlan = '';
 		}
-	}
+	});
 
 	// Format number with commas
 	function formatNumber(num: number): string {
@@ -77,7 +80,7 @@
 		<div class="mb-12">
 			<button
 				class="mx-auto flex items-center rounded-lg border-2 border-black bg-blue-500 px-6 py-3 font-bold text-white shadow-[4px_4px_0px_0px_rgba(0,0,0,1)] transition-all hover:translate-x-[2px] hover:translate-y-[2px] hover:shadow-[2px_2px_0px_0px_rgba(0,0,0,1)]"
-				on:click={toggleCalculator}
+				onclick={toggleCalculator}
 			>
 				<span class="mr-2">{calculatorVisible ? 'Hide' : 'Show'} Budget Calculator</span>
 				<svg
@@ -125,7 +128,7 @@
 					</div>
 
 					<button
-						on:click={calculateRecommendation}
+						onclick={calculateRecommendation}
 						class="w-full rounded-lg border-2 border-black bg-red-500 px-6 py-3 font-bold text-white shadow-[4px_4px_0px_0px_rgba(0,0,0,1)] transition-all hover:translate-x-[2px] hover:translate-y-[2px] hover:shadow-[2px_2px_0px_0px_rgba(0,0,0,1)]"
 					>
 						Calculate Best Value
@@ -172,10 +175,12 @@
 						: ''} overflow-hidden rounded-lg border-4 border-black bg-white p-8 transition-all duration-300"
 				>
 					{#if highlightedPlan === plan.id && !plan.isPopular}
-						<div
-							class="absolute -right-12 -top-1 rotate-45 transform border-2 border-black bg-green-500 px-12 py-1 font-bold text-white"
-						>
-							RECOMMENDED
+						<div class="-translate-y-12 translate-x-20 rotate-45">
+							<div
+								class="absolute -right-12 -top-1 transform border-2 border-black bg-green-500 px-12 py-1 font-bold text-white"
+							>
+								RECOMMENDED
+							</div>
 						</div>
 					{:else if plan.isPopular}
 						<div class="-translate-y-14 translate-x-20 rotate-45">
@@ -224,7 +229,7 @@
 							: highlightedPlan === plan.id
 								? 'bg-green-500 text-white shadow-[4px_4px_0px_0px_rgba(0,0,0,1)]'
 								: 'bg-black text-white shadow-[4px_4px_0px_0px_rgba(239,68,68,1)]'} px-6 py-3 text-center font-bold transition-all hover:translate-x-[2px] hover:translate-y-[2px] hover:shadow-[2px_2px_0px_0px_rgba(239,68,68,1)]"
-						on:click={handleNavClick}
+						onclick={handleNavClick}
 					>
 						Get Started
 					</a>

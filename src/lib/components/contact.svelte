@@ -6,7 +6,7 @@
 	const { contact } = siteContent;
 
 	// You can add interactive functionality here
-	let isScrolled = false;
+	let isScrolled = $state(false);
 
 	// Handle scroll for sticky header effect
 	onMount(() => {
@@ -41,7 +41,7 @@
 			<div
 				class="rounded-lg border-4 border-black bg-white p-8 shadow-[8px_8px_0px_0px_rgba(239,68,68,1)]"
 			>
-				<form on:submit={handleSubmit}>
+				<form onsubmit={handleSubmit}>
 					<div class="mb-6">
 						<label for="name" class="mb-2 block font-bold">Restaurant Name</label>
 						<input

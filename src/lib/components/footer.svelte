@@ -38,7 +38,7 @@
 					<ul class="space-y-2">
 						{#each section.links as link}
 							<li>
-								<a on:click={handleNavClick} href={link.href} class="text-gray-400 hover:text-white"
+								<a onclick={handleNavClick} href={link.href} class="text-gray-400 hover:text-white"
 									>{link.text}</a
 								>
 							</li>
@@ -64,7 +64,7 @@
 			<div class="text-gray-500">{footer.copyright}</div>
 			<div class="mt-4 flex space-x-6 md:mt-0">
 				{#each footer.socialLinks as social}
-					<a href={social.href} on:click={handleNavClick} class="text-gray-400 hover:text-white">
+					<a href={social.href} onclick={handleNavClick} class="text-gray-400 hover:text-white">
 						<span class="sr-only">{social.name}</span>
 						<svg class="h-6 w-6" fill="currentColor" viewBox="0 0 24 24" aria-hidden="true">
 							{@html socialIcons[social.name]}
