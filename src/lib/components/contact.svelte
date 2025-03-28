@@ -76,8 +76,13 @@
 						<label for="package" class="mb-2 block font-bold">Interested In</label>
 
 						<Select.Root portal={null}>
-							<Select.Trigger class="w-full focus:outline-none focus:ring-2 focus:ring-red-500">
-								<Select.Value placeholder="Select a package to discuss during our call" />
+							<Select.Trigger
+								class="w-full border-2 border-black  focus:outline-none focus:ring-2 focus:ring-red-500"
+							>
+								<Select.Value
+									id="package"
+									placeholder="Select a package to discuss during our call"
+								/>
 							</Select.Trigger>
 							<Select.Content>
 								<Select.Group>
