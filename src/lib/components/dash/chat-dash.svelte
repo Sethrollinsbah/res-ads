@@ -2,18 +2,20 @@
 	import { onMount } from 'svelte';
 	// Import components
 	import ChatInterface from './chat/chat-interface.svelte';
-	import FunnelVisualization from './funnel/funnel-visualization.svelte';
 	import SettingsPanel from './campaign-settings/settings-panel.svelte';
 	// Import Drawer components
 	import * as Drawer from '$lib/components/ui/drawer';
 	// Import types
-	import type { CampaignSettings, FunnelStep } from './dashboard-types';
+	import type { CampaignSettings } from './dashboard-types';
 	// Icons
 	import { Rocket, RefreshCw, X } from 'lucide-svelte';
-	import Logo from '../logo.svelte';
+
+	// For safe imports
+	let FunnelVisualization: any = $state();
+	let isFunnelLoaded = $state(false);
 
 	// State for responsive design
-	let windowWidth = 0;
+	let windowWidth = $state(0);
 	let drawerOpen = $state(false);
 
 	// Campaign settings state
@@ -25,9 +27,8 @@
 	});
 
 	// Reference to funnel component for methods
-	let funnelComponent: FunnelVisualization;
+	let funnelComponent: any;
 	let highlightedPlan = $state('');
-	let calculatorResult = $state(false);
 
 	// Toggle drawer for mobile view
 	function toggleDrawer() {
@@ -48,52 +49,55 @@
 
 	// Handle updates from chat conversation
 	function handleConversationUpdate(event: CustomEvent) {
-		const { budget, audienceFocus, conversionFocus, onlineOrdersFocus, input } = event.detail;
+		const { budget, audienceFocus, conversionFocus, onlineOrdersFocus } = event.detail;
 
 		// Update budget if provided
 		if (budget !== null) {
 			campaignSettings.budget = budget;
 		}
 
-		// Update awareness node if audience is mentioned
-		if (audienceFocus) {
-			funnelComponent.updateNodeMetrics('1', {
-				reach: '15,700',
-				impressions: Math.round(campaignSettings.budget * 60).toLocaleString()
-			});
+		// Only update the funnel if the component is loaded and the methods are available
+		if (funnelComponent && isFunnelLoaded) {
+			// Update awareness node if audience is mentioned
+			if (audienceFocus) {
+				funnelComponent.updateNodeMetrics('1', {
+					reach: '15,700',
+					impressions: Math.round(campaignSettings.budget * 60).toLocaleString()
+				});
 
-			funnelComponent.updateNodeAppearance('1', {
-				description: 'Target local food enthusiasts'
-			});
-		}
+				funnelComponent.updateNodeAppearance('1', {
+					description: 'Target local food enthusiasts'
+				});
+			}
 
-		// Update phone calls conversion if mentioned
-		if (conversionFocus === 'calls') {
-			funnelComponent.updateNodeMetrics('4a', {
-				calls: '127',
-				callRate: '6.8%'
-			});
+			// Update phone calls conversion if mentioned
+			if (conversionFocus === 'calls') {
+				funnelComponent.updateNodeMetrics('4a', {
+					calls: '127',
+					callRate: '6.8%'
+				});
 
-			funnelComponent.updateNodeAppearance('4a', {
-				width: 140 // Make it slightly larger to emphasize
-			});
-		}
+				funnelComponent.updateNodeAppearance('4a', {
+					width: 140 // Make it slightly larger to emphasize
+				});
+			}
 
-		// Update online orders if mentioned
-		if (onlineOrdersFocus) {
-			funnelComponent.updateNodeMetrics('4c', {
-				orders: '104',
-				orderRate: '5.6%'
-			});
+			// Update online orders if mentioned
+			if (onlineOrdersFocus) {
+				funnelComponent.updateNodeMetrics('4c', {
+					orders: '104',
+					orderRate: '5.6%'
+				});
 
-			funnelComponent.updateNodeAppearance('4c', {
-				width: 140 // Make it slightly larger to emphasize
-			});
+				funnelComponent.updateNodeAppearance('4c', {
+					width: 140 // Make it slightly larger to emphasize
+				});
+			}
 		}
 	}
 
 	onMount(() => {
-		// Set up window resize listener
+		// First set up the event listeners that don't need to be async
 		const handleResize = () => {
 			windowWidth = window.innerWidth;
 		};
@@ -101,6 +105,18 @@
 		window.addEventListener('resize', handleResize);
 		handleResize(); // Initial call
 
+		// Then do the async imports
+		(async () => {
+			try {
+				const module = await import('./funnel/funnel-visualization.svelte');
+				FunnelVisualization = module.default;
+				isFunnelLoaded = true;
+			} catch (error) {
+				console.error('Failed to load FunnelVisualization:', error);
+			}
+		})();
+
+		// Return the cleanup function directly (not wrapped in a Promise)
 		return () => {
 			window.removeEventListener('resize', handleResize);
 		};
@@ -109,7 +125,7 @@
 
 <svelte:window bind:innerWidth={windowWidth} />
 
-<div class="flex h-screen flex-col bg-gray-500">
+<div class="flex h-screen flex-col bg-gray-50">
 	<header class="border-b border-gray-200 bg-white px-6 py-3 shadow-sm">
 		<div class="mx-auto flex max-w-7xl items-center justify-between">
 			<div class="flex items-center gap-3">
@@ -156,11 +172,19 @@
 			</div>
 
 			<div class="relative flex-1">
-				<FunnelVisualization
-					bind:this={funnelComponent}
-					budget={campaignSettings.budget}
-					{highlightedPlan}
-				/>
+				{#if isFunnelLoaded && FunnelVisualization}
+					<FunnelVisualization budget={campaignSettings.budget} {highlightedPlan}
+					></FunnelVisualization>
+				{:else}
+					<div class="flex h-full w-full items-center justify-center">
+						<div class="text-center">
+							<div
+								class="mx-auto mb-4 h-8 w-8 animate-spin rounded-full border-2 border-gray-900 border-t-transparent"
+							></div>
+							<p class="text-gray-600">Loading visualization...</p>
+						</div>
+					</div>
+				{/if}
 			</div>
 
 			<SettingsPanel settings={campaignSettings} on:update={handleSettingsUpdate} />
@@ -197,7 +221,19 @@
 				</div>
 
 				<div class="relative flex-1 overflow-hidden">
-					<FunnelVisualization budget={campaignSettings.budget} {highlightedPlan} />
+					{#if isFunnelLoaded && FunnelVisualization}
+						<FunnelVisualization budget={campaignSettings.budget} {highlightedPlan}
+						></FunnelVisualization>
+					{:else}
+						<div class="flex h-full w-full items-center justify-center">
+							<div class="text-center">
+								<div
+									class="mx-auto mb-4 h-8 w-8 animate-spin rounded-full border-2 border-gray-900 border-t-transparent"
+								></div>
+								<p class="text-gray-600">Loading visualization...</p>
+							</div>
+						</div>
+					{/if}
 				</div>
 
 				<SettingsPanel settings={campaignSettings} on:update={handleSettingsUpdate}>
