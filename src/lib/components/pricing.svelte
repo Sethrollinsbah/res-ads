@@ -1,10 +1,12 @@
 <script lang="ts">
-	import { siteContent } from '$lib/data/site-content';
 	import { onMount } from 'svelte';
+	import { createSmoothScrollHandler } from '@/lib/utils/scroll';
+	let handleNavClick: (e: MouseEvent) => void;
 
-	// Get the pricing data from site content
-	const { pricing } = siteContent;
-
+	onMount(() => {
+		// Create a handler with 100px offset to account for the sticky header
+		handleNavClick = createSmoothScrollHandler(100);
+	});
 	// Custom pricing data with CPM values
 	const pricingData = {
 		title: 'Transparent CPM Pricing',
@@ -279,6 +281,7 @@
 							: highlightedPlan === plan.id
 								? 'bg-green-500 text-white shadow-[4px_4px_0px_0px_rgba(0,0,0,1)]'
 								: 'bg-black text-white shadow-[4px_4px_0px_0px_rgba(239,68,68,1)]'} px-6 py-3 text-center font-bold transition-all hover:translate-x-[2px] hover:translate-y-[2px] hover:shadow-[2px_2px_0px_0px_rgba(239,68,68,1)]"
+						on:click={handleNavClick}
 					>
 						Get Started
 					</a>
