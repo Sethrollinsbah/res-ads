@@ -63,7 +63,7 @@ function easeInOutQuad(t: number): number {
  * @param offset - Optional offset from the target (useful for fixed headers)
  */
 export function createSmoothScrollHandler(offsetA = 0) {
-  const offset = 100
+  const offset = 120
   return (e: MouseEvent) => {
     // Get the target from the clicked element
     const target = e.currentTarget as HTMLAnchorElement;
