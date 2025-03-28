@@ -95,7 +95,7 @@ export const siteContent = {
   },
   
   // Pricing Section
-  pricing: {
+  pricingData: {
 		title: 'Transparent CPM Pricing',
 		subtitle: 'Get more bang for your buck with our impression-based pricing',
 		plans: [
