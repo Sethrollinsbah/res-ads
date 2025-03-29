@@ -1,69 +1,79 @@
-<!-- src/routes/dash/+layout.svelte -->
 <script lang="ts">
 	import '../../app.css';
-	import { onMount } from 'svelte';
-	import { fade, fly } from 'svelte/transition';
+
 	import {
+		LayoutGrid,
 		Menu,
-		X,
-		Home,
 		BarChart3,
-		Settings,
-		FileText,
 		PlusCircle,
-		Bell,
-		User,
+		FileText,
+		Settings,
 		HelpCircle,
-		LogOut
+		LogOut,
+		Bell,
+		User
 	} from 'lucide-svelte';
+	import * as Sheet from '$lib/components/ui/sheet';
+	import * as Popover from '$lib/components/ui/popover/index.js';
+	import * as Avatar from '$lib/components/ui/avatar';
+	import { Button } from '$lib/components/ui/button';
 	import Logo from '$lib/components/logo.svelte';
 	import { cn } from '$lib/utils';
+	import { Input } from '$lib/components/ui/input/index.js';
+	import { Label } from '$lib/components/ui/label/index.js';
+	import * as DropdownMenu from '@/lib/components/ui/dropdown-menu';
 
-	// Sidebar state
+	// Navigation state
 	let sidebarOpen = $state(false);
 	let windowWidth = $state(0);
-	const isMobile = () => windowWidth < 768;
 
-	// Defines if sidebar should be shown over content instead of pushing content
-	$effect(() => {
-		overlayMode = isMobile() && sidebarOpen;
-	});
+	// Computed state
+	const isMobile = $derived(windowWidth < 768);
 	let overlayMode = $state(false);
-
-	function toggleSidebar() {
-		sidebarOpen = !sidebarOpen;
-	}
-
-	const closeSidebar = () => {
-		if (isMobile()) {
-			sidebarOpen = false;
-		}
-	};
 
 	// Navigation items
 	const navigationItems = [
-		{ icon: Home, label: 'Dashboard', href: '/dash' },
+		{ icon: LayoutGrid, label: 'Dashboard', href: '/dash' },
 		{ icon: BarChart3, label: 'Analytics', href: '/dash/analytics' },
 		{ icon: PlusCircle, label: 'New Campaign', href: '/dash/new' },
 		{ icon: FileText, label: 'Campaigns', href: '/dash/campaigns' },
 		{ icon: Settings, label: 'Settings', href: '/dash/settings' }
 	];
 
-	onMount(() => {
-		windowWidth = window.innerWidth;
+	// Window resize handling
+	$effect(() => {
 		const handleResize = () => {
 			windowWidth = window.innerWidth;
 			if (windowWidth >= 768) {
-				// Reset sidebar state on large screens
+				sidebarOpen = true;
+			} else {
 				sidebarOpen = false;
 			}
 		};
 
 		window.addEventListener('resize', handleResize);
+		handleResize(); // Initial call
+
 		return () => {
 			window.removeEventListener('resize', handleResize);
 		};
 	});
+
+	// Overlay mode effect
+	$effect(() => {
+		overlayMode = isMobile && sidebarOpen;
+	});
+
+	// Toggle sidebar
+	function toggleSidebar() {
+		sidebarOpen = !sidebarOpen;
+	}
+
+	function closeSidebar() {
+		if (isMobile) {
+			sidebarOpen = false;
+		}
+	}
 
 	// Extract props for the slot
 	let { data, children } = $props();
@@ -71,40 +81,80 @@
 
 <svelte:window bind:innerWidth={windowWidth} />
 
+<!-- Mobile Sheet Sidebar -->
+<Sheet.Root bind:open={sidebarOpen} modal={true}>
+	<Sheet.Content side="left" class="w-64 p-0">
+		<div class="flex h-full flex-col">
+			<!-- Sidebar Header -->
+			<div class="flex h-16 items-center border-b border-gray-200 px-6">
+				<Logo scale="scale-50" />
+			</div>
+
+			<!-- Navigation Links -->
+			<nav class="flex-1 overflow-y-auto px-4 py-6">
+				<ul class="space-y-1">
+					{#each navigationItems as item}
+						<li>
+							<a
+								href={item.href}
+								class="flex items-center rounded-lg px-4 py-3 text-gray-700 transition-colors hover:bg-gray-100"
+								on:click={closeSidebar}
+							>
+								<svelte:component this={item.icon} class="mr-3 h-5 w-5 text-gray-500" />
+								<span>{item.label}</span>
+							</a>
+						</li>
+					{/each}
+				</ul>
+
+				<div class="my-6 border-t border-gray-200"></div>
+
+				<ul class="space-y-1">
+					<li>
+						<a
+							href="/dash/help"
+							class="flex items-center rounded-lg px-4 py-3 text-gray-700 transition-colors hover:bg-gray-100"
+							on:click={closeSidebar}
+						>
+							<HelpCircle class="mr-3 h-5 w-5 text-gray-500" />
+							<span>Help & Support</span>
+						</a>
+					</li>
+					<li>
+						<a
+							href="/auth/logout"
+							class="flex items-center rounded-lg px-4 py-3 text-red-600 transition-colors hover:bg-red-50"
+							on:click={closeSidebar}
+						>
+							<LogOut class="mr-3 h-5 w-5 text-red-500" />
+							<span>Log Out</span>
+						</a>
+					</li>
+				</ul>
+			</nav>
+		</div>
+	</Sheet.Content>
+</Sheet.Root>
+
 <!-- Overlay backdrop for mobile -->
 {#if overlayMode}
-	<div
-		class="fixed inset-0 z-20 bg-black/50"
-		on:click={toggleSidebar}
-		transition:fade={{ duration: 200 }}
-	></div>
+	<div class="fixed inset-0 z-40 bg-black/50" on:click={toggleSidebar}></div>
 {/if}
 
 <div class="flex h-screen w-full bg-gray-50">
-	<!-- Sidebar -->
+	<!-- Desktop Sidebar -->
 	<aside
 		class={cn(
-			'fixed inset-y-0 z-30 flex w-64 flex-col border-r border-gray-200 bg-white shadow-sm transition-all duration-300 ease-in-out',
-			overlayMode ? 'left-0' : sidebarOpen ? 'left-0' : '-left-64',
-			isMobile() ? 'w-full md:w-64' : 'w-64'
+			'fixed inset-y-0 z-30 hidden w-64 flex-col border-r border-gray-200 bg-white shadow-sm transition-all duration-300 ease-in-out md:flex',
+			sidebarOpen ? 'left-0' : '-left-64'
 		)}
 	>
-		<!-- Mobile close button -->
-		{#if isMobile()}
-			<button
-				class="absolute right-4 top-4 text-gray-500 hover:text-gray-700 md:hidden"
-				on:click={toggleSidebar}
-			>
-				<X class="h-6 w-6" />
-			</button>
-		{/if}
-
-		<!-- Sidebar header -->
+		<!-- Sidebar Header -->
 		<div class="flex h-16 items-center border-b border-gray-200 px-6">
 			<Logo scale="scale-50" />
 		</div>
 
-		<!-- Navigation links -->
+		<!-- Navigation Links -->
 		<nav class="flex-1 overflow-y-auto px-4 py-6">
 			<ul class="space-y-1">
 				{#each navigationItems as item}
@@ -112,7 +162,6 @@
 						<a
 							href={item.href}
 							class="flex items-center rounded-lg px-4 py-3 text-gray-700 transition-colors hover:bg-gray-100"
-							on:click={closeSidebar}
 						>
 							<svelte:component this={item.icon} class="mr-3 h-5 w-5 text-gray-500" />
 							<span>{item.label}</span>
@@ -128,7 +177,6 @@
 					<a
 						href="/dash/help"
 						class="flex items-center rounded-lg px-4 py-3 text-gray-700 transition-colors hover:bg-gray-100"
-						on:click={closeSidebar}
 					>
 						<HelpCircle class="mr-3 h-5 w-5 text-gray-500" />
 						<span>Help & Support</span>
@@ -138,7 +186,6 @@
 					<a
 						href="/auth/logout"
 						class="flex items-center rounded-lg px-4 py-3 text-red-600 transition-colors hover:bg-red-50"
-						on:click={closeSidebar}
 					>
 						<LogOut class="mr-3 h-5 w-5 text-red-500" />
 						<span>Log Out</span>
@@ -152,7 +199,7 @@
 	<div
 		class={cn(
 			'flex flex-1 flex-col transition-all duration-300 ease-in-out',
-			!isMobile() && sidebarOpen ? 'ml-64' : 'ml-0'
+			sidebarOpen ? 'md:ml-64' : 'md:ml-0'
 		)}
 	>
 		<!-- Header -->
@@ -160,26 +207,81 @@
 			class="flex h-16 items-center justify-between border-b border-gray-200 bg-white px-4 md:px-6"
 		>
 			<div class="flex items-center">
-				<button
-					class="mr-2 rounded-lg p-2 text-gray-600 hover:bg-gray-100"
-					on:click={toggleSidebar}
-					aria-label="Toggle navigation menu"
-				>
+				<Button variant="ghost" size="icon" class="mr-2 " on:click={toggleSidebar}>
 					<Menu class="h-6 w-6" />
-				</button>
+				</Button>
 				<h1 class="hidden text-xl font-semibold md:block">Restaurant Ad Dashboard</h1>
 			</div>
 
 			<div class="flex items-center space-x-3">
-				<button class="relative rounded-full p-2 text-gray-600 hover:bg-gray-100">
-					<Bell class="h-5 w-5" />
-					<span class="absolute right-1 top-1 h-2 w-2 rounded-full bg-red-500"></span>
-				</button>
-				<div class="flex items-center space-x-2">
-					<div class="flex h-8 w-8 items-center justify-center rounded-full bg-gray-200">
-						<User class="h-5 w-5 text-gray-500" />
-					</div>
-					<span class="hidden text-sm font-medium md:inline">Restaurant Owner</span>
+				<div></div>
+
+				<div class="relative">
+					<Popover.Root portal={null}>
+						<Popover.Trigger asChild let:builder>
+							<Button builders={[builder]} size="icon" variant="ghost">
+								<Bell class="h-5 w-5" />
+								<span class="absolute right-1 top-1 h-2 w-2 rounded-full bg-red-500"></span></Button
+							>
+						</Popover.Trigger>
+						<Popover.Content class="absolute w-80 -translate-x-1/2">
+							<div class="grid gap-4">
+								<div class="space-y-2">
+									<h4 class="font-medium leading-none">Dimensions</h4>
+									<p class="text-sm text-muted-foreground">Set the dimensions for the layer.</p>
+								</div>
+								<div class="grid gap-2">
+									<div class="grid grid-cols-3 items-center gap-4">
+										<Label for="width">Width</Label>
+										<Input id="width" value="100%" class="col-span-2 h-8" />
+									</div>
+									<div class="grid grid-cols-3 items-center gap-4">
+										<Label for="maxWidth">Max. width</Label>
+										<Input id="maxWidth" value="300px" class="col-span-2 h-8" />
+									</div>
+									<div class="grid grid-cols-3 items-center gap-4">
+										<Label for="height">Height</Label>
+										<Input id="height" value="25px" class="col-span-2 h-8" />
+									</div>
+									<div class="grid grid-cols-3 items-center gap-4">
+										<Label for="maxHeight">Max. height</Label>
+										<Input id="maxHeight" value="none" class="col-span-2 h-8" />
+									</div>
+								</div>
+							</div>
+						</Popover.Content>
+					</Popover.Root>
+				</div>
+				<div class="relative flex items-center space-x-2">
+					<DropdownMenu.Root>
+						<DropdownMenu.Trigger asChild let:builder>
+							<Button builders={[builder]} variant="ghost" class="flex items-center space-x-2">
+								<Avatar.Root>
+									<Avatar.Fallback>
+										<User class="h-5 w-5 text-gray-500" />
+									</Avatar.Fallback>
+								</Avatar.Root>
+								<span class="hidden text-sm font-medium md:inline">Restaurant Owner</span>
+							</Button>
+						</DropdownMenu.Trigger>
+						<DropdownMenu.Content align="end">
+							<DropdownMenu.Label>My Account</DropdownMenu.Label>
+							<DropdownMenu.Separator />
+							<DropdownMenu.Item>
+								<Settings class="mr-2 h-4 w-4" />
+								<span>Profile Settings</span>
+							</DropdownMenu.Item>
+							<DropdownMenu.Item>
+								<HelpCircle class="mr-2 h-4 w-4" />
+								<span>Help & Support</span>
+							</DropdownMenu.Item>
+							<DropdownMenu.Separator />
+							<DropdownMenu.Item className="text-red-600">
+								<LogOut class="mr-2 h-4 w-4" />
+								<span>Logout</span>
+							</DropdownMenu.Item>
+						</DropdownMenu.Content>
+					</DropdownMenu.Root>
 				</div>
 			</div>
 		</header>

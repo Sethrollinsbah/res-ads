@@ -125,7 +125,7 @@
 
 <svelte:window bind:innerWidth={windowWidth} />
 
-<div class="flex h-screen flex-col bg-gray-50">
+<div class="flex h-[calc(100dvh-4rem)] flex-col bg-gray-50">
 	<header class="border-b border-gray-200 bg-white px-6 py-3 shadow-sm">
 		<div class="mx-auto flex max-w-7xl items-center justify-between">
 			<div class="flex items-center gap-3">

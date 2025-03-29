@@ -297,17 +297,12 @@
 	});
 </script>
 
-<div class="flex min-h-screen flex-col bg-gray-50">
+<div class="flex min-h-[calc(100dvh-4rem)] flex-col bg-gray-50">
 	<!-- Navigation Header -->
 	<header class="border-b border-gray-200 bg-white shadow-sm">
 		<div class="mx-auto flex max-w-7xl items-center justify-between px-4 py-4">
 			<div class="flex items-center gap-3">
-				<div
-					class="rounded-lg border-2 border-black bg-red-500 px-2 py-1 font-bold text-white shadow-[2px_2px_0px_0px_rgba(0,0,0,1)]"
-				>
-					ResAds
-				</div>
-				<h1 class="text-xl font-bold">Restaurant Dashboard</h1>
+				<h1 class="text-xl font-bold">Analytics</h1>
 			</div>
 
 			<div class="flex items-center gap-4">

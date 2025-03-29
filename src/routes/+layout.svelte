@@ -3,6 +3,7 @@
 	import '../app.css';
 	import SEOHead from '$lib/components/seo/head.svelte';
 
+	// import { Toaster } from '$lib/components/ui/sonner';
 	// Import any other site-wide components or data
 	import { siteContent } from '$lib/data/site-content';
 
@@ -27,3 +28,5 @@
 	<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
 	<!-- You could add font loading or other resources here -->
 </svelte:head>
+
+<!-- <Toaster /> -->
