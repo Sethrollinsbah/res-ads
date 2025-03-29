@@ -88,14 +88,15 @@
 
 <Node useDefaults {id} position={{ x: positionX, y: positionY }}>
 	<div
+		role="tooltip"
 		class="platform-node"
 		style="
             background-color: {backgroundColor}; 
             border: 4px solid {borderColor};
             box-shadow: {isHovered ? '10px 10px 0px' : '8px 8px 0px'} {shadowColor};
         "
-		on:mouseenter={() => (isHovered = true)}
-		on:mouseleave={() => (isHovered = false)}
+		onmouseenter={() => (isHovered = true)}
+		onmouseleave={() => (isHovered = false)}
 	>
 		<div class="anchor-point" style="top: {anchorTop}px; left: {anchorLeft}px;">
 			<Anchor output id="{id}_anchor1" direction={anchorDirection}></Anchor>

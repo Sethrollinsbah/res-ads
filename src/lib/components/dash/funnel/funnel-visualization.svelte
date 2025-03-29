@@ -3,6 +3,7 @@
 	import FunnelNode from './funnel-node.svelte';
 	import { defaultFunnelSteps, updateMetricsForBudget } from './funnel-data';
 	import type { FunnelStep, FunnelEdge } from '../dashboard-types';
+	import Dnd from '../dnd.svelte';
 
 	const dispatch = createEventDispatcher();
 
@@ -98,35 +99,7 @@
 
 <div class="relative flex-1">
 	{#if isMounted && Svelvet && Node && Edge}
-		<Svelvet bind:this={canvas} editable={false} background="#f9fafb" height="100%" width="100%">
-			{#each funnelSteps as node}
-				<Node
-					id={node.id}
-					x={node.x}
-					y={node.y}
-					width={node.width}
-					height="auto"
-					component={FunnelNode}
-					data={node}
-					noDefaultInteractions={true}
-				/>
-			{/each}
-
-			{#each edges as edge}
-				<Edge
-					id={edge.id}
-					source={edge.source}
-					target={edge.target}
-					animated={edge.animated}
-					label={edge.label}
-					sourceHandle="bottom"
-					targetHandle="top"
-					color={edge.color}
-					type="smoothstep"
-					thickness={2}
-				/>
-			{/each}
-		</Svelvet>
+		<Dnd></Dnd>
 	{:else}
 		<div class="flex h-full w-full items-center justify-center">
 			<div class="text-center">

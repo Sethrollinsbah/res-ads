@@ -25,7 +25,7 @@
 	});
 </script>
 
-<div class="bg-white p-4 shadow-inner">
+<div class="h-full bg-white p-4 shadow-inner">
 	<h3 class="mb-2 font-semibold">Campaign Settings</h3>
 	<div class="grid grid-cols-1 gap-4 sm:grid-cols-2">
 		<div>
