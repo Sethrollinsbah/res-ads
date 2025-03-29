@@ -45,7 +45,7 @@
 		const handleResize = () => {
 			windowWidth = window.innerWidth;
 			if (windowWidth >= 768) {
-				sidebarOpen = true;
+				sidebarOpen = false;
 			} else {
 				sidebarOpen = false;
 			}
@@ -82,7 +82,7 @@
 <svelte:window bind:innerWidth={windowWidth} />
 
 <!-- Mobile Sheet Sidebar -->
-<Sheet.Root bind:open={sidebarOpen} modal={true}>
+<Sheet.Root bind:open={sidebarOpen}>
 	<Sheet.Content side="left" class="w-64 p-0">
 		<div class="flex h-full flex-col">
 			<!-- Sidebar Header -->
@@ -276,7 +276,7 @@
 								<span>Help & Support</span>
 							</DropdownMenu.Item>
 							<DropdownMenu.Separator />
-							<DropdownMenu.Item className="text-red-600">
+							<DropdownMenu.Item class="text-red-600">
 								<LogOut class="mr-2 h-4 w-4" />
 								<span>Logout</span>
 							</DropdownMenu.Item>
