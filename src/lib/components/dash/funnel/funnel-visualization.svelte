@@ -25,9 +25,9 @@
 	let edges = $state<FunnelEdge[]>([]);
 	let canvas: any; // Svelvet canvas reference
 	let isMounted = $state(false);
-	let Svelvet: any;
-	let Node: any;
-	let Edge: any;
+	let Svelvet: any= $state();
+	let Node: any= $state();
+	let Edge: any= $state();
 
 	// When funnelSteps change, update edges - using $effect instead of reactive block
 	$effect(() => {

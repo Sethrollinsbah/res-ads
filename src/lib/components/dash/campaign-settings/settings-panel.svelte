@@ -17,7 +17,7 @@
 			primaryGoal: 'website',
 			secondaryGoal: 'calls'
 		}
-	} = $props<SettingsPanelProps>();
+	} = $props() as SettingsPanelProps;
 
 	// Use $effect for reactive behavior instead of $: block
 	$effect(() => {

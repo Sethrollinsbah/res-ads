@@ -5,7 +5,7 @@
 		generateAIResponse,
 		extractBudgetFromInput,
 		determineConversationFocus
-	} from './chat-utils.ts';
+	} from './chat-utils';
 	import type { ChatMessage, RestaurantInfo } from '../dashboard-types';
 
 	const dispatch = createEventDispatcher();
@@ -25,7 +25,7 @@
 				timestamp: new Date()
 			}
 		]
-	} = $props<ChatInterfaceProps>();
+	} = $props() as ChatInterfaceProps;
 
 	// State using Svelte 5 reactive primitives
 	let messages = $state(initialMessages);

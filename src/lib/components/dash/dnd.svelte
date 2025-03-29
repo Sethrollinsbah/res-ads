@@ -4,11 +4,15 @@
 	import CampaignNode from '@/lib/components/svelvet/tables/campaign-node.svelte';
 	import PlatformNode from '@/lib/components/svelvet/tables/platform-node.svelte';
 	import DbTable from '$lib/components/svelvet/tables/db-table.svelte';
+	import ActivityPanel from './activity-panel.svelte';
+	import CampaignPanel from './campaign-panel.svelte';
+	import CreateButton from './create-button.svelte';
 
 	// Use $state to make these reactive
 	let loaded = $state(false);
+	let innerHeight = $state(0);
 	let innerWidth = $state(0);
-	let halfInnerWidth = $derived(innerWidth / 2);
+	let partialInnerHeight = $derived(innerHeight - 4 * 16);
 	// Make sure components are only rendered after onMount
 
 	onMount(() => {
@@ -19,9 +23,9 @@
 	});
 </script>
 
-<svelte:window bind:innerWidth />
+<svelte:window bind:innerWidth bind:innerHeight />
 {#if loaded}
-	<Svelvet height={500} width={halfInnerWidth} fitView controls minimap>
+	<Svelvet width={innerWidth} height={partialInnerHeight} fitView controls minimap>
 		<DbTable
 			id="people"
 			positionX={-300}
@@ -132,3 +136,7 @@
 		/>
 	</Svelvet>
 {/if}
+
+<!-- <ActivityPanel></ActivityPanel> -->
+<CampaignPanel></CampaignPanel>
+<CreateButton></CreateButton>

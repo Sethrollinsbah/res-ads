@@ -212,6 +212,7 @@
 			<Drawer.Overlay class="fixed inset-0 z-50 bg-black/40" />
 			<Drawer.Content
 				class="fixed bottom-0 left-0 right-0 z-50 mt-24 flex h-[90%] flex-col rounded-t-lg border-t border-gray-200 bg-white"
+				style="contain: content;"
 			>
 				<div class="mx-auto flex w-full max-w-md items-center justify-between px-4 py-3">
 					<h2 class="text-lg font-semibold">Campaign Funnel</h2>
@@ -221,9 +222,25 @@
 				</div>
 
 				<div class="relative flex-1 overflow-hidden">
-					{#if isFunnelLoaded && FunnelVisualization}
-						<FunnelVisualization budget={campaignSettings.budget} {highlightedPlan}
-						></FunnelVisualization>
+					{#if drawerOpen && isFunnelLoaded && FunnelVisualization}
+						<!-- Only render when drawer is actually open -->
+						<div style="contain: layout size;">
+							<FunnelVisualization
+								budget={campaignSettings.budget}
+								{highlightedPlan}
+								simplified={true}
+								<!--
+								Add
+								this
+								prop
+								to
+								your
+								component
+								--
+							>
+								></FunnelVisualization
+							>
+						</div>
 					{:else}
 						<div class="flex h-full w-full items-center justify-center">
 							<div class="text-center">
