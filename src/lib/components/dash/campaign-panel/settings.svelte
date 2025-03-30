@@ -1,8 +1,15 @@
-<script>
+<script lang="ts">
 	import Button from '../../ui/button/button.svelte';
+	import { settingsPanel } from '$lib';
 </script>
 
-<!-- Delete Service  -->
+{#if $settingsPanel.type === 'campaign'}
+	Setting Campaign layout here
+{:else if $settingsPanel.type === 'platform'}
+	Setting Platform Campaign layout here
+{:else if $settingsPanel.type === 'table'}
+	Setting Table layout here
+{/if}<!-- Delete Service  -->
 <p class="text-sm text-destructive">
 	<b> Delete Service </b>
 	<br />
