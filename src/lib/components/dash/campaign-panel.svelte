@@ -3,13 +3,10 @@
 	import { quintOut } from 'svelte/easing';
 	import { settingsPanel } from '@/lib';
 	import * as Tabs from '$lib/components/ui/tabs/index.js';
-	import * as Card from '$lib/components/ui/card/index.js';
-	import { Button } from '$lib/components/ui/button/index.js';
-	import { Input } from '$lib/components/ui/input/index.js';
-	import { Label } from '$lib/components/ui/label/index.js';
 	import Overview from './campaign-panel/overview.svelte';
 	import Settings from './campaign-panel/settings.svelte';
-	let campPanel = [
+	import Data from './campaign-panel/data.svelte';
+	let campPanel = $state([
 		{
 			name: 'Overview',
 			code: Overview
@@ -18,7 +15,7 @@
 			name: 'Settings',
 			code: Settings
 		}
-	];
+	]);
 
 	$effect(() => {
 		if ($settingsPanel.type === 'campaign') {
@@ -37,6 +34,10 @@
 				{
 					name: 'Overview',
 					code: Overview
+				},
+				{
+					name: 'Data',
+					code: Data
 				},
 				{
 					name: 'Settings',
@@ -89,7 +90,7 @@
 					</svg>
 				</button>
 			</div>
-			<Tabs.List class="grid w-full  grid-cols-2 bg-transparent">
+			<Tabs.List class="flex w-full flex-row justify-start bg-transparent">
 				{#each campPanel as s}
 					<Tabs.Trigger
 						class="border-red-500 text-primary/50 data-[state=active]:text-primary "
