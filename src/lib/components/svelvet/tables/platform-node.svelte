@@ -102,7 +102,7 @@
 			$settingsPanel = { id, type: 'platform' };
 		}}
 		ontouchend={() => {
-			settingsPanel.set({ id, type: 'table' });
+			settingsPanel.set({ id, type: 'platform' });
 		}}
 	>
 		<!-- Header -->
