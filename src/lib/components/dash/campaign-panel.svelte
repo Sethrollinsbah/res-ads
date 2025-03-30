@@ -23,7 +23,7 @@
 
 {#if $settingsPanel.id !== null}
 	<div
-		class="fixed bottom-0 right-0 h-[80dvh] w-[calc(100vw-1rem)] w-full rounded-tl-lg bg-white shadow-lg ring-1 ring-black md:w-[60vw]"
+		class="fixed bottom-0 right-0 h-[80dvh] w-[calc(100vw-1rem)] w-full overflow-y-auto rounded-tl-lg bg-white shadow-lg ring-1 ring-black md:w-[60vw]"
 		transition:fly={{
 			x: 100,
 			y: 100,
