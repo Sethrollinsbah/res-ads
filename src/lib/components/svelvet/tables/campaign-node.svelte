@@ -65,6 +65,9 @@
 		onclick={() => {
 			settingsPanel.set({ id, type: 'campaign' });
 		}}
+		ontouchend={() => {
+			settingsPanel.set({ id, type: 'table' });
+		}}
 	>
 		<!-- Header -->
 		<div

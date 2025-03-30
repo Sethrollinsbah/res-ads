@@ -101,6 +101,9 @@
 		onclick={() => {
 			$settingsPanel = { id, type: 'platform' };
 		}}
+		ontouchend={() => {
+			settingsPanel.set({ id, type: 'table' });
+		}}
 	>
 		<!-- Header -->
 		<div

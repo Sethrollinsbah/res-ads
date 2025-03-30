@@ -34,8 +34,7 @@
 </script>
 
 <Node useDefaults {id} position={{ x: positionX, y: positionY }}>
-	<div
-		role="tooltip"
+	<button
 		class="nodeWrapper"
 		style="
             background-color: {backgroundColor}; 
@@ -45,6 +44,9 @@
 		onmouseenter={() => (isHovered = true)}
 		onmouseleave={() => (isHovered = false)}
 		onclick={() => {
+			settingsPanel.set({ id, type: 'table' });
+		}}
+		ontouchend={() => {
 			settingsPanel.set({ id, type: 'table' });
 		}}
 	>
@@ -108,7 +110,7 @@
 				</Table.Body>
 			</Table.Root>
 		</div>
-	</div>
+	</button>
 </Node>
 
 <style>
