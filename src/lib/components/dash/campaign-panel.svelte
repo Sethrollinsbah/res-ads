@@ -9,16 +9,53 @@
 	import { Label } from '$lib/components/ui/label/index.js';
 	import Overview from './campaign-panel/overview.svelte';
 	import Settings from './campaign-panel/settings.svelte';
-	const campPanel = [
+	let campPanel = [
 		{
 			name: 'Overview',
-			code: 'overview'
+			code: Overview
 		},
 		{
 			name: 'Settings',
-			code: 'settings'
+			code: Settings
 		}
 	];
+
+	$effect(() => {
+		if ($settingsPanel.type === 'campaign') {
+			campPanel = [
+				{
+					name: 'Overview',
+					code: Overview
+				},
+				{
+					name: 'Settings',
+					code: Settings
+				}
+			];
+		} else if ($settingsPanel.type === 'table') {
+			campPanel = [
+				{
+					name: 'Overview',
+					code: Overview
+				},
+				{
+					name: 'Settings',
+					code: Settings
+				}
+			];
+		} else if ($settingsPanel.type === 'platform') {
+			campPanel = [
+				{
+					name: 'Overview',
+					code: Overview
+				},
+				{
+					name: 'Settings',
+					code: Settings
+				}
+			];
+		}
+	});
 </script>
 
 {#if $settingsPanel.id !== null}
@@ -56,13 +93,16 @@
 				{#each campPanel as s}
 					<Tabs.Trigger
 						class="border-red-500 text-primary/50 data-[state=active]:text-primary "
-						value={s.code}>{s.name}</Tabs.Trigger
+						value={s.name.toLowerCase()}>{s.name}</Tabs.Trigger
 					>
 				{/each}
 			</Tabs.List>
 			<div class="overflow-y-auto border-t-[1px] border-accent px-12">
-				<Tabs.Content value="overview"><Overview></Overview></Tabs.Content>
-				<Tabs.Content value="settings"><Settings></Settings></Tabs.Content>
+				{#each campPanel as s}
+					<Tabs.Content value={s.name.toLowerCase()}
+						><svelte:component this={s.code}></svelte:component></Tabs.Content
+					>
+				{/each}
 			</div>
 		</Tabs.Root>
 	</div>

@@ -752,11 +752,443 @@
 										</div>
 									</div>
 								</div>
+
+								<div class="grid gap-2">
+									<Label>Demographics</Label>
+									<div class="space-y-3">
+										<div class="rounded-md border border-gray-200 p-3">
+											<Label class="text-sm">Age Range</Label>
+											<div class="mt-2 flex flex-wrap gap-2">
+												{#each ['18-24', '25-34', '35-44', '45-54', '55-64', '65+'] as ageRange}
+													<Button
+														variant={['25-34', '35-44', '45-54'].includes(ageRange)
+															? 'default'
+															: 'outline'}
+														class="h-8 text-xs"
+													>
+														{ageRange}
+													</Button>
+												{/each}
+											</div>
+										</div>
+									</div>
+								</div>
+
+								<div class="mt-2 rounded-md bg-blue-50 p-3 text-sm text-blue-800">
+									<div class="flex items-center">
+										<ThumbsUp class="mr-2 h-4 w-4" />
+										<span class="font-medium">Audience Insight</span>
+									</div>
+									<p class="mt-1">
+										Food enthusiasts on {platformSettings.name} are most active during meal planning
+										times (11AM-1PM and 4PM-7PM). Consider scheduling your ads during these peak engagement
+										periods.
+									</p>
+								</div>
 							</div>
 						</Card.Content>
+						<Card.Footer class="flex justify-between">
+							<Button type="submit" variant="outline">Cancel</Button>
+							<Button type="submit">Save Changes</Button>
+						</Card.Footer>
 					</Card.Root>
-				</form></Tabs.Content
-			>
+				</form>
+			</Tabs.Content>
+
+			<!-- Advanced Tab -->
+			<Tabs.Content value="advanced" class="py-4">
+				<form on:submit|preventDefault={handlePlatformSubmit} class="space-y-4">
+					<Card.Root>
+						<Card.Header>
+							<Card.Title class="flex items-center gap-2">
+								<Cog class="h-5 w-5 text-gray-500" />
+								Advanced Settings
+							</Card.Title>
+							<Card.Description>Configure advanced options for this platform.</Card.Description>
+						</Card.Header>
+						<Card.Content>
+							<div class="grid gap-4">
+								<div class="grid gap-2">
+									<Label for="bid-strategy">Bidding Strategy</Label>
+									<Select.Root value={platformSettings.bidStrategy}>
+										<Select.Trigger id="bid-strategy" class="w-full">
+											<Select.Value placeholder="Select bidding strategy" />
+										</Select.Trigger>
+										<Select.Content>
+											<Select.Item value="automatic">Automatic Bidding</Select.Item>
+											<Select.Item value="manual">Manual CPC</Select.Item>
+											<Select.Item value="target_cpa">Target CPA</Select.Item>
+											<Select.Item value="target_roas">Target ROAS</Select.Item>
+										</Select.Content>
+									</Select.Root>
+									<p class="text-xs text-gray-500">
+										Determines how the platform will optimize your bids for ad placements.
+									</p>
+								</div>
+
+								<div class="grid gap-2">
+									<Label>Day Parting</Label>
+									<div class="flex items-center">
+										<Switch.Root id="dayparting-toggle" checked={platformSettings.dayparting}>
+											<Switch.Thumb />
+										</Switch.Root>
+										<Label for="dayparting-toggle" class="ml-2">Enable day parting</Label>
+									</div>
+
+									{#if platformSettings.dayparting}
+										<div class="mt-2">
+											<p class="mb-2 text-xs text-gray-500">Select active hours for your ads:</p>
+											<div class="grid grid-cols-6 gap-2">
+												{#each Array.from({ length: 24 }, (_, i) => i) as hour}
+													<button
+														type="button"
+														class={`h-8 rounded-md border text-xs ${
+															isTimeSelected(hour)
+																? 'bg-primary text-primary-foreground'
+																: 'bg-background text-foreground'
+														}`}
+														on:click={() => toggleTimeSelection(hour)}
+													>
+														{getTimeDisplay(hour)}
+													</button>
+												{/each}
+											</div>
+										</div>
+									{/if}
+								</div>
+
+								<div class="grid gap-2">
+									<Label>Conversion Tracking</Label>
+									<div class="flex items-center">
+										<Switch.Root id="tracking-toggle" checked={platformSettings.tracking}>
+											<Switch.Thumb />
+										</Switch.Root>
+										<Label for="tracking-toggle" class="ml-2">Enable conversion tracking</Label>
+									</div>
+									<p class="text-xs text-gray-500">
+										Track actions like calls, website visits, and online orders from this platform.
+									</p>
+								</div>
+
+								<Separator.Root class="my-2" />
+
+								<div class="grid gap-2">
+									<Label>Platform Integration</Label>
+									<div class="rounded-md border border-gray-200 p-3">
+										<div class="flex items-center justify-between">
+											<div>
+												<span class="font-medium">{platformSettings.name} Account</span>
+												<p class="text-sm text-gray-500">Connected as: restaurant@example.com</p>
+											</div>
+											<Button variant="outline" size="sm">Reconnect</Button>
+										</div>
+									</div>
+								</div>
+							</div>
+						</Card.Content>
+						<Card.Footer class="flex justify-between">
+							<Button type="submit" variant="outline">Cancel</Button>
+							<Button type="submit">Save Changes</Button>
+						</Card.Footer>
+					</Card.Root>
+				</form>
+			</Tabs.Content>
+		</Tabs.Root>
+	</div>
+{:else if $settingsPanel.type === 'table'}
+	<div class="space-y-6 py-4">
+		<Tabs.Root value="general">
+			<Tabs.List class="w-full">
+				<Tabs.Trigger value="general">General</Tabs.Trigger>
+				<Tabs.Trigger value="schema">Schema</Tabs.Trigger>
+				<Tabs.Trigger value="access">Access & Security</Tabs.Trigger>
+			</Tabs.List>
+
+			<!-- General Tab -->
+			<Tabs.Content value="general" class="py-4">
+				<form on:submit|preventDefault={handleTableSubmit} class="space-y-4">
+					<Card.Root>
+						<Card.Header>
+							<Card.Title class="flex items-center gap-2">
+								<Database class="h-5 w-5 text-gray-500" />
+								Table Settings
+							</Card.Title>
+							<Card.Description>Configure general settings for this data table.</Card.Description>
+						</Card.Header>
+						<Card.Content>
+							<div class="grid gap-4">
+								<div class="grid gap-2">
+									<Label for="table-name">Table Name</Label>
+									<Input
+										id="table-name"
+										bind:value={tableSettings.name}
+										placeholder="Enter table name"
+										required
+									/>
+								</div>
+
+								<div class="grid gap-2">
+									<Label for="table-description">Description</Label>
+									<Input
+										id="table-description"
+										bind:value={tableSettings.description}
+										placeholder="Enter table description"
+									/>
+									<p class="text-xs text-gray-500">
+										Brief description of what this table contains and how it's used.
+									</p>
+								</div>
+
+								<div class="grid gap-2">
+									<Label for="refresh-frequency">Data Refresh Frequency</Label>
+									<!-- <Select.Root value={tableSettings.refreshFrequency}> -->
+									<!-- 	<Select.Trigger id="refresh-frequency" class="w-full"> -->
+									<!-- 		<Select.Value placeholder="Select refresh frequency" /> -->
+									<!-- 	</Select.Trigger> -->
+									<!-- 	<Select.Content> -->
+									<!-- 		{#each refreshOptions as option} -->
+									<!-- 			<Select.Item value={option.value}>{option.label}</Select.Item> -->
+									<!-- 		{/each} -->
+									<!-- 	</Select.Content> -->
+									<!-- </Select.Root> -->
+								</div>
+
+								<div class="grid gap-2">
+									<Label>Sync Settings</Label>
+									<div class="flex items-center">
+										<!-- <Switch.Root id="auto-sync-toggle" checked={tableSettings.autoSync}> -->
+										<!-- 	<Switch.Thumb /> -->
+										<!-- </Switch.Root> -->
+										<Label for="auto-sync-toggle" class="ml-2">Automatically sync from source</Label
+										>
+									</div>
+									<p class="text-xs text-gray-500">
+										Automatically sync data changes from the original source.
+									</p>
+								</div>
+
+								<div class="grid gap-2">
+									<Label>Reporting</Label>
+									<div class="flex items-center">
+										<!-- <Switch.Root id="reports-toggle" checked={tableSettings.includeInReports}> -->
+										<!-- 	<Switch.Thumb /> -->
+										<!-- </Switch.Root> -->
+										<Label for="reports-toggle" class="ml-2">Include in campaign reports</Label>
+									</div>
+									<p class="text-xs text-gray-500">
+										Include data from this table in campaign performance reports.
+									</p>
+								</div>
+							</div>
+						</Card.Content>
+						<Card.Footer class="flex justify-between">
+							<Button type="submit" variant="outline">Cancel</Button>
+							<Button type="submit">Save Changes</Button>
+						</Card.Footer>
+					</Card.Root>
+				</form>
+			</Tabs.Content>
+
+			<!-- Schema Tab -->
+			<Tabs.Content value="schema" class="py-4">
+				<form on:submit|preventDefault={handleTableSubmit} class="space-y-4">
+					<Card.Root>
+						<Card.Header>
+							<Card.Title class="flex items-center gap-2">
+								<Database class="h-5 w-5 text-gray-500" />
+								Table Schema
+							</Card.Title>
+							<Card.Description>View and modify the table structure.</Card.Description>
+						</Card.Header>
+						<Card.Content>
+							<div class="grid gap-4">
+								<div class="overflow-x-auto rounded-md border border-gray-200">
+									<table class="min-w-full divide-y divide-gray-200">
+										<thead class="bg-gray-50">
+											<tr>
+												<th
+													class="px-6 py-3 text-left text-xs font-medium uppercase tracking-wider text-gray-500"
+												>
+													Field
+												</th>
+												<th
+													class="px-6 py-3 text-left text-xs font-medium uppercase tracking-wider text-gray-500"
+												>
+													Type
+												</th>
+												<th
+													class="px-6 py-3 text-left text-xs font-medium uppercase tracking-wider text-gray-500"
+												>
+													Constraint
+												</th>
+												<th
+													class="px-6 py-3 text-left text-xs font-medium uppercase tracking-wider text-gray-500"
+												>
+													Actions
+												</th>
+											</tr>
+										</thead>
+										<tbody class="divide-y divide-gray-200 bg-white">
+											<!-- {#each tableData.schema as column, i} -->
+											<!-- 	<tr> -->
+											<!-- 		<td class="whitespace-nowrap px-6 py-4 text-sm font-medium text-gray-900"> -->
+											<!-- 			{column.name} -->
+											<!-- 		</td> -->
+											<!-- 		<td class="whitespace-nowrap px-6 py-4 text-sm text-gray-500"> -->
+											<!-- 			{column.type} -->
+											<!-- 		</td> -->
+											<!-- 		<td class="whitespace-nowrap px-6 py-4 text-sm text-gray-500"> -->
+											<!-- 			{column.constraint} -->
+											<!-- 		</td> -->
+											<!-- 		<td class="whitespace-nowrap px-6 py-4 text-right text-sm font-medium"> -->
+											<!-- 			<Button variant="ghost" size="sm" class="text-blue-600 hover:text-blue-900"> -->
+											<!-- 				Edit -->
+											<!-- 			</Button> -->
+											<!-- 		</td> -->
+											<!-- 	</tr> -->
+											<!-- {/each} -->
+										</tbody>
+									</table>
+								</div>
+
+								<Button variant="outline" class="flex w-full items-center justify-center">
+									<svg
+										xmlns="http://www.w3.org/2000/svg"
+										class="mr-2 h-4 w-4"
+										fill="none"
+										viewBox="0 0 24 24"
+										stroke="currentColor"
+									>
+										<path
+											stroke-linecap="round"
+											stroke-linejoin="round"
+											stroke-width="2"
+											d="M12 4v16m8-8H4"
+										/>
+									</svg>
+									Add New Field
+								</Button>
+
+								<div class="mt-4 rounded-md bg-amber-50 p-3 text-sm text-amber-800">
+									<div class="flex items-center">
+										<AlertCircle class="mr-2 h-4 w-4" />
+										<span class="font-medium">Schema Change Warning</span>
+									</div>
+									<p class="mt-1">
+										Changes to the table schema may affect existing campaigns and analytics. We
+										recommend testing schema changes in a development environment first.
+									</p>
+								</div>
+							</div>
+						</Card.Content>
+						<Card.Footer class="flex justify-between">
+							<Button type="submit" variant="outline">Cancel</Button>
+							<Button type="submit">Save Changes</Button>
+						</Card.Footer>
+					</Card.Root>
+				</form>
+			</Tabs.Content>
+
+			<!-- Access & Security Tab -->
+			<Tabs.Content value="access" class="py-4">
+				<form on:submit|preventDefault={handleTableSubmit} class="space-y-4">
+					<Card.Root>
+						<Card.Header>
+							<Card.Title class="flex items-center gap-2">
+								<ShieldAlert class="h-5 w-5 text-gray-500" />
+								Access & Security
+							</Card.Title>
+							<Card.Description>Manage access controls and security settings.</Card.Description>
+						</Card.Header>
+						<Card.Content>
+							<div class="grid gap-4">
+								<!-- <div class="grid gap-2"> -->
+								<!-- 	<Label for="privacy-level">Privacy Level</Label> -->
+								<!-- 	<Select.Root value={tableSettings.privacyLevel}> -->
+								<!-- 		<Select.Trigger id="privacy-level" class="w-full"> -->
+								<!-- 			<Select.Value placeholder="Select privacy level" /> -->
+								<!-- 		</Select.Trigger> -->
+								<!-- 		<Select.Content> -->
+								<!-- 			{#each privacyLevels as option} -->
+								<!-- 				<Select.Item value={option.value}>{option.label}</Select.Item> -->
+								<!-- 			{/each} -->
+								<!-- 		</Select.Content> -->
+								<!-- 	</Select.Root> -->
+								<!-- 	<p class="text-xs text-gray-500"> -->
+								<!-- 		Determines who can access and view this table. -->
+								<!-- 	</p> -->
+								<!-- </div> -->
+								<!--  -->
+								<!-- <div class="grid gap-2"> -->
+								<!-- 	<Label>Data Backup</Label> -->
+								<!-- 	<div class="flex items-center"> -->
+								<!-- 		<Switch.Root id="backup-toggle" checked={tableSettings.backupEnabled}> -->
+								<!-- 			<Switch.Thumb /> -->
+								<!-- 		</Switch.Root> -->
+								<!-- 		<Label for="backup-toggle" class="ml-2">Enable automated backups</Label> -->
+								<!-- 	</div> -->
+								<!-- 	<p class="text-xs text-gray-500"> -->
+								<!-- 		Automatically back up this table on a weekly schedule. -->
+								<!-- 	</p> -->
+								<!-- </div> -->
+								<!--  -->
+								<!-- <div class="grid gap-2"> -->
+								<!-- 	<Label>API Access</Label> -->
+								<!-- 	<div class="flex items-center"> -->
+								<!-- 		<Switch.Root id="api-toggle" checked={tableSettings.apiAccess}> -->
+								<!-- 			<Switch.Thumb /> -->
+								<!-- 		</Switch.Root> -->
+								<!-- 		<Label for="api-toggle" class="ml-2">Enable API access</Label> -->
+								<!-- 	</div> -->
+								<!-- 	<p class="text-xs text-gray-500"> -->
+								<!-- 		Allow this table to be accessed via API for integration with other systems. -->
+								<!-- 	</p> -->
+								<!-- </div> -->
+
+								{#if tableSettings.apiAccess}
+									<div class="grid gap-2">
+										<Label>API Key</Label>
+										<div class="flex items-center space-x-2">
+											<Input value="sk_live_xxxxxxxxxxxxxxxxxxxx" type="password" readonly />
+											<Button variant="outline" size="icon">
+												<Key class="h-4 w-4" />
+											</Button>
+										</div>
+										<p class="text-xs text-gray-500">
+											Use this key to authenticate API requests for this table.
+										</p>
+									</div>
+								{/if}
+
+								<Separator.Root class="my-2" />
+
+								<div class="grid gap-2">
+									<Label>Data Management</Label>
+
+									<Button variant="outline" class="flex w-full items-center justify-center">
+										<RefreshCw class="mr-2 h-4 w-4" />
+										Refresh Data Now
+									</Button>
+
+									<Button variant="outline" class="flex w-full items-center justify-center">
+										<Share2 class="mr-2 h-4 w-4" />
+										Export Table Data
+									</Button>
+
+									<Button variant="destructive" class="flex w-full items-center justify-center">
+										<Trash2 class="mr-2 h-4 w-4" />
+										Delete Table
+									</Button>
+								</div>
+							</div>
+						</Card.Content>
+						<Card.Footer class="flex justify-between">
+							<Button type="submit" variant="outline">Cancel</Button>
+							<Button type="submit">Save Changes</Button>
+						</Card.Footer>
+					</Card.Root>
+				</form>
+			</Tabs.Content>
 		</Tabs.Root>
 	</div>
 {/if}
