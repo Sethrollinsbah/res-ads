@@ -1,6 +1,6 @@
 <!-- src/lib/components/dash/dnd.svelte -->
 <script lang="ts">
-	import { Svelvet } from 'svelvet';
+	import { Background, Svelvet } from 'svelvet';
 	import { onMount } from 'svelte';
 	import ActivityPanel from './activity-panel.svelte';
 	import CampaignPanel from './campaign-panel.svelte';
@@ -53,6 +53,7 @@
 				id={node.id}
 			/>
 		{/each}
+		<Background slot="background" dotSize={2} dotColor="black" />
 	</Svelvet>
 {/if}
 
