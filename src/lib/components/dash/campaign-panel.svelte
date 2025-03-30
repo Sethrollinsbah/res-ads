@@ -9,8 +9,6 @@
 	import { Label } from '$lib/components/ui/label/index.js';
 	import Overview from './campaign-panel/overview.svelte';
 	import Settings from './campaign-panel/settings.svelte';
-	import { onMount } from 'svelte';
-
 	const campPanel = [
 		{
 			name: 'Overview',
@@ -21,54 +19,20 @@
 			code: 'settings'
 		}
 	];
-
-	// Add state to track screen size
-	let isMdOrLarger = $state(false);
-
-	// Function to check screen size
-	function checkScreenSize() {
-		const mdBreakpoint = 768; // Standard Tailwind md breakpoint
-		isMdOrLarger = window.innerWidth >= mdBreakpoint;
-	}
-
-	onMount(() => {
-		// Initial check
-		checkScreenSize();
-
-		// Add resize listener
-		window.addEventListener('resize', checkScreenSize);
-
-		// Cleanup
-		return () => {
-			window.removeEventListener('resize', checkScreenSize);
-		};
-	});
 </script>
 
-<svelte:window on:resize={checkScreenSize} />
-
-{#if isMdOrLarger && $settingsPanel.id !== null}
+{#if $settingsPanel.id !== null}
 	<div
-		class="fixed bottom-0 right-0 h-[80dvh] w-[60vw] rounded-tl-lg bg-white shadow-lg ring-1 ring-black"
-		in:fly={isMdOrLarger
-			? {
-					x: 100,
-					y: 100,
-					duration: 300,
-					easing: quintOut
-				}
-			: { duration: 0 }}
-		out:fly={isMdOrLarger
-			? {
-					x: 100,
-					y: 100,
-					duration: 300,
-					easing: quintOut
-				}
-			: { duration: 0 }}
+		class="fixed bottom-0 right-0 h-[80dvh] w-[calc(100vw-1rem)] w-full rounded-tl-lg bg-white shadow-lg ring-1 ring-black md:w-[60vw]"
+		transition:fly={{
+			x: 100,
+			y: 100,
+			duration: 300,
+			easing: quintOut
+		}}
 	>
 		<Tabs.Root value="overview" class="w-full">
-			<div class="flex flex-row justify-between p-12">
+			<div class=" flex flex-row justify-between p-12">
 				<h1>{$settingsPanel.id}</h1>
 				<button
 					class="flex w-full items-center justify-end"
@@ -88,10 +52,10 @@
 					</svg>
 				</button>
 			</div>
-			<Tabs.List class="grid w-full grid-cols-2 bg-transparent">
+			<Tabs.List class="grid w-full  grid-cols-2 bg-transparent">
 				{#each campPanel as s}
 					<Tabs.Trigger
-						class="border-red-500 text-primary/50 data-[state=active]:text-primary"
+						class="border-red-500 text-primary/50 data-[state=active]:text-primary "
 						value={s.code}>{s.name}</Tabs.Trigger
 					>
 				{/each}

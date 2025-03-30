@@ -1,6 +1,7 @@
 <script lang="ts">
 	import { Node, Anchor } from 'svelvet';
 	import * as Table from '$lib/components/ui/table';
+	import { settingsPanel } from '@/lib';
 
 	// Customizable properties using Svelte 5's $props()
 	let {
@@ -43,6 +44,9 @@
         "
 		onmouseenter={() => (isHovered = true)}
 		onmouseleave={() => (isHovered = false)}
+		onclick={() => {
+			settingsPanel.set({ id, type: 'table' });
+		}}
 	>
 		<div id="container">
 			<div

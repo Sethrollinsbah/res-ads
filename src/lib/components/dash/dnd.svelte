@@ -7,9 +7,6 @@
 	import ActivityPanel from './activity-panel.svelte';
 	import CampaignPanel from './campaign-panel.svelte';
 	import CreateButton from './create-button.svelte';
-	import * as Drawer from '../ui/drawer';
-	import Button from '../ui/button/button.svelte';
-	import { settingsPanel } from '@/lib';
 
 	// Use $state to make these reactive
 	let loaded = $state(false);
@@ -138,50 +135,9 @@
 			component: PlatformNode
 		}
 	]);
-
-	// Local state using $state
-	let isHovered = $state(false);
-
-	// Local state using $state
-	let isDrawerDisabled = $state(false);
-	let drawerOpen = $state(false);
-
-	// Function to check window width and disable drawer on larger screens
-	function checkWindowSize() {
-		const mdBreakpoint = 768; // Standard Tailwind md breakpoint
-		isDrawerDisabled = window.innerWidth >= mdBreakpoint;
-
-		// Close drawer if it's open and screen size becomes larger than md
-		if (isDrawerDisabled && drawerOpen) {
-			drawerOpen = false;
-		}
-	}
-
-	// Handle click on the node
-	function handleNodeClick() {
-		if (!isDrawerDisabled) {
-			drawerOpen = true;
-		}
-
-		// Always update settings panel regardless of drawer state
-		$settingsPanel = { id, type: 'table' };
-	}
-
-	onMount(() => {
-		// Initial check
-		checkWindowSize();
-
-		// Add resize listener
-		window.addEventListener('resize', checkWindowSize);
-
-		// Cleanup
-		return () => {
-			window.removeEventListener('resize', checkWindowSize);
-		};
-	});
 </script>
 
-<svelte:window on:resize={checkWindowSize} bind:innerWidth bind:innerHeight />
+<svelte:window bind:innerWidth bind:innerHeight />
 {#if loaded}
 	<Svelvet width={innerWidth} height={partialInnerHeight} fitView controls minimap>
 		<DbTable
@@ -199,39 +155,9 @@
 				{ field: 'mass', type: 'int', constraint: '' }
 			]}
 		/>
-		<Drawer.Root bind:open={drawerOpen}>
-			{#each nodes as n, i}
-				<button onclick={handleNodeClick}>
-					<svelte:component this={n.component} {...n.data} position={n.position} id={i} />
-				</button>
-			{/each}
-			<Drawer.Content>
-				<div class="mx-auto w-full max-w-sm">
-					<Drawer.Header>
-						<Drawer.Title>Move Goal</Drawer.Title>
-						<Drawer.Description>Set your daily activity goal.</Drawer.Description>
-					</Drawer.Header>
-					<div class="p-4 pb-0">
-						<div class="flex items-center justify-center space-x-2">
-							<Button variant="outline" size="icon" class="h-8 w-8 shrink-0 rounded-full">
-								<span class="sr-only">Decrease</span>
-							</Button>
-							<div class="flex-1 text-center">
-								<div class="text-7xl font-bold tracking-tighter"></div>
-								<div class="text-[0.70rem] uppercase text-muted-foreground">Calories/day</div>
-							</div>
-						</div>
-						<div class="mt-3 h-[120px]"></div>
-					</div>
-					<Drawer.Footer>
-						<Button>Submit</Button>
-						<Drawer.Close asChild let:builder>
-							<Button builders={[builder]} variant="outline">Cancel</Button>
-						</Drawer.Close>
-					</Drawer.Footer>
-				</div>
-			</Drawer.Content>
-		</Drawer.Root>
+		{#each nodes as n, i}
+			<svelte:component this={n.component} {...n.data} position={n.position} id={i} />
+		{/each}
 	</Svelvet>
 {/if}
 
