@@ -6,6 +6,8 @@
 	import Overview from './campaign-panel/overview.svelte';
 	import Settings from './campaign-panel/settings.svelte';
 	import Data from './campaign-panel/data.svelte';
+	import Badge from '../ui/badge/badge.svelte';
+	import ApprovedLogos from './approved-logos.svelte';
 	let campPanel = $state([
 		{
 			name: 'Overview',
@@ -70,12 +72,20 @@
 		}}
 	>
 		<Tabs.Root value="overview" class="w-full">
-			<div class=" flex flex-row justify-between p-12">
-				<h1>{$settingsPanel.id}</h1>
+			<div class=" flex w-full flex-row justify-between p-12">
+				<div class="flex w-full flex-row">
+					<ApprovedLogos int={$settingsPanel.type}></ApprovedLogos>
+					<div class="w-full">
+						<h2 class="w-full text-2xl font-bold capitalize">
+							{$settingsPanel.id.split('---')[1] ?? $settingsPanel.id}
+						</h2>
+						<Badge class="capitalize" variant="outline">{$settingsPanel.type}</Badge>
+					</div>
+				</div>
 				<button
 					class="flex w-full items-center justify-end"
 					onclick={() => {
-						$settingsPanel = { id: null, type: null };
+						$settingsPanel = { id: null, type: null, icon: null };
 					}}
 				>
 					<svg
@@ -90,7 +100,7 @@
 					</svg>
 				</button>
 			</div>
-			<Tabs.List class="flex w-full flex-row justify-start bg-transparent">
+			<Tabs.List class="flex w-full flex-row justify-start bg-transparent px-12">
 				{#each campPanel as s}
 					<Tabs.Trigger
 						class="border-red-500 text-primary/50 data-[state=active]:text-primary "

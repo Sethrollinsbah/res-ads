@@ -4,21 +4,26 @@
 	import { quintOut } from 'svelte/easing';
 	import { onMount } from 'svelte';
 
+	// Use $state for reactive variables in Svelte 5
 	let isOpen = $state(true);
+
 	interface HistoryItem {
-		project: String;
-		action: String;
+		project: string; // Changed from String to string for TypeScript conventions
+		action: string;
 		time: number;
 	}
 
-	let history: HistoryItem[] = $state([]); // Store history as an array of strings
+	// Use $state for reactive arrays
+	let history = $state<HistoryItem[]>([]);
 
 	function togglePanel() {
 		isOpen = !isOpen;
 	}
 
 	function addToHistory(item: HistoryItem) {
+		// In Svelte 5, we can directly modify reactive variables
 		history = [...history, item];
+
 		// Limit history length if needed
 		if (history.length > 10) {
 			history = history.slice(history.length - 10);
@@ -32,6 +37,7 @@
 			action: 'Deployed',
 			time: new Date().getTime()
 		});
+
 		setTimeout(
 			() =>
 				addToHistory({
@@ -41,6 +47,7 @@
 				}),
 			2000
 		);
+
 		setTimeout(
 			() =>
 				addToHistory({
@@ -69,13 +76,13 @@
 			transition:fly={{ y: 50, duration: 300, easing: quintOut }}
 		>
 			<ul class="space-y-2">
-				{#each history.reverse() as item}
+				{#each [...history].reverse() as item}
 					<li class="grid h-fit grid-cols-[32px_1fr] rounded bg-gray-100 p-2">
 						<CircleCheckBig />
 						<div class="flex flex-col justify-evenly">
 							<h1 class="text-sm font-light">{item.project}</h1>
 							<h1 class="text-sm font-light">{item.action}</h1>
-							<h1 class="text-sm font-light">{item.time}</h1>
+							<h1 class="text-sm font-light">{new Date(item.time).toLocaleTimeString()}</h1>
 						</div>
 					</li>
 				{/each}

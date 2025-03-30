@@ -31,6 +31,13 @@
 
 	// Local state using $state
 	let isHovered = $state(false);
+	// Add these variables to track drag state
+	let isDragging = $state(false);
+	let dragStartX = $state(0);
+	let dragStartY = $state(0);
+	const dragThreshold = 5; // Pixels of movement needed to consider it a drag
+
+	// Replace your current event handlers with these
 </script>
 
 <Node useDefaults {id} position={{ x: positionX, y: positionY }}>
@@ -43,11 +50,43 @@
         "
 		onmouseenter={() => (isHovered = true)}
 		onmouseleave={() => (isHovered = false)}
-		onclick={() => {
-			settingsPanel.set({ id, type: 'table' });
+		onmousedown={(e) => {
+			isDragging = false;
+			dragStartX = e.clientX;
+			dragStartY = e.clientY;
 		}}
-		ontouchend={() => {
-			settingsPanel.set({ id, type: 'table' });
+		onmousemove={(e) => {
+			// Calculate distance moved
+			const dx = Math.abs(e.clientX - dragStartX);
+			const dy = Math.abs(e.clientY - dragStartY);
+
+			// If moved more than threshold, consider it a drag
+			if (dx > dragThreshold || dy > dragThreshold) {
+				isDragging = true;
+			}
+		}}
+		onmouseup={(e) => {
+			// Only open settings panel if not dragging
+			if (!isDragging) {
+				settingsPanel.set({ id, type: 'table' });
+			}
+		}}
+		ontouchstart={(e) => {
+			isDragging = false;
+			dragStartX = e.touches[0].clientX;
+			dragStartY = e.touches[0].clientY;
+		}}
+		ontouchmove={(e) => {
+			const dx = Math.abs(e.touches[0].clientX - dragStartX);
+			const dy = Math.abs(e.touches[0].clientY - dragStartY);
+			if (dx > dragThreshold || dy > dragThreshold) {
+				isDragging = true;
+			}
+		}}
+		ontouchend={(e) => {
+			if (!isDragging) {
+				settingsPanel.set({ id, type: 'table' });
+			}
 		}}
 	>
 		<div id="container">

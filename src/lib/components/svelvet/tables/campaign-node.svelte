@@ -49,6 +49,10 @@
 	const getStatusColor = (status: string) => {
 		return statusColors[status] || mainColor;
 	};
+	let isDragging = $state(false);
+	let dragStartX = $state(0);
+	let dragStartY = $state(0);
+	const dragThreshold = 5; // Pixels of movement needed to consider it a drag
 </script>
 
 <Node useDefaults {id} position={{ x: positionX, y: positionY }}>
@@ -62,11 +66,43 @@
         "
 		onmouseenter={() => (isHovered = true)}
 		onmouseleave={() => (isHovered = false)}
-		onclick={() => {
-			settingsPanel.set({ id, type: 'campaign' });
+		onmousedown={(e) => {
+			isDragging = false;
+			dragStartX = e.clientX;
+			dragStartY = e.clientY;
 		}}
-		ontouchend={() => {
-			settingsPanel.set({ id, type: 'campaign' });
+		onmousemove={(e) => {
+			// Calculate distance moved
+			const dx = Math.abs(e.clientX - dragStartX);
+			const dy = Math.abs(e.clientY - dragStartY);
+
+			// If moved more than threshold, consider it a drag
+			if (dx > dragThreshold || dy > dragThreshold) {
+				isDragging = true;
+			}
+		}}
+		onmouseup={(e) => {
+			// Only open settings panel if not dragging
+			if (!isDragging) {
+				settingsPanel.set({ id, type: 'campaign' });
+			}
+		}}
+		ontouchstart={(e) => {
+			isDragging = false;
+			dragStartX = e.touches[0].clientX;
+			dragStartY = e.touches[0].clientY;
+		}}
+		ontouchmove={(e) => {
+			const dx = Math.abs(e.touches[0].clientX - dragStartX);
+			const dy = Math.abs(e.touches[0].clientY - dragStartY);
+			if (dx > dragThreshold || dy > dragThreshold) {
+				isDragging = true;
+			}
+		}}
+		ontouchend={(e) => {
+			if (!isDragging) {
+				settingsPanel.set({ id, type: 'campaign' });
+			}
 		}}
 	>
 		<!-- Header -->
