@@ -13,7 +13,7 @@
 	<Dialog.Trigger
 		id="find"
 		class={buttonVariants({ variant: 'outline' }) + ' fixed right-4 top-24 '}
-		><Plus class="mr-[2px] size-4" /> Create {$settingsPanel}</Dialog.Trigger
+		><Plus class="mr-[2px] size-4" /> Create</Dialog.Trigger
 	>
 	<Dialog.Content class="sm:max-w-[425px]">
 		<Tabs.Root value="home" class="h-full w-full bg-none">

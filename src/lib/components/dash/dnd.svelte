@@ -1,4 +1,4 @@
-<script>
+<script lang="ts">
 	import { Svelvet } from 'svelvet';
 	import { onMount } from 'svelte';
 	import CampaignNode from '@/lib/components/svelvet/tables/campaign-node.svelte';
@@ -7,6 +7,9 @@
 	import ActivityPanel from './activity-panel.svelte';
 	import CampaignPanel from './campaign-panel.svelte';
 	import CreateButton from './create-button.svelte';
+	import * as Drawer from '../ui/drawer';
+	import Button from '../ui/button/button.svelte';
+	import { settingsPanel } from '@/lib';
 
 	// Use $state to make these reactive
 	let loaded = $state(false);
@@ -21,9 +24,164 @@
 			loaded = true;
 		}, 100);
 	});
+
+	let nodes: Node[] = $state([
+		{
+			id: 'people',
+			position: { x: -300, y: -300 },
+			data: {
+				headingText: 'People',
+				headingColor: '#4285F4',
+				borderColor: '#000000',
+				shadowColor: '#99C9FF',
+				tableData: [
+					{ field: 'id', type: 'bigint', constraint: 'autoincrement()' },
+					{ field: 'name', type: 'varchar', constraint: 'not null' },
+					{ field: 'height', type: 'int', constraint: '' },
+					{ field: 'mass', type: 'int', constraint: '' }
+				]
+			},
+			component: DbTable
+		},
+		{
+			id: 'weekend-special',
+			position: { x: -400, y: -200 },
+			data: {
+				campaignName: 'Weekend Special',
+				campaignStatus: 'Active',
+				budget: 1200,
+				impressions: 45000,
+				clicks: 2250,
+				conversions: 180,
+				startDate: '2025-03-15',
+				endDate: '2025-04-15',
+				mainColor: '#FF5252',
+				shadowColor: '#FF9999'
+			},
+			component: CampaignNode
+		},
+		{
+			id: 'instagram-channel',
+			position: { x: 800, y: 200 },
+			data: {
+				platformName: 'Instagram',
+				platformType: 'Social',
+				platformIcon: '📸',
+				budget: 450,
+				budgetPercentage: 35,
+				impressions: 22500,
+				clicks: 1125,
+				conversions: 90,
+				costPerClick: 0.4,
+				costPerConversion: 5.0,
+				mainColor: '#E1306C',
+				shadowColor: '#F5A3C7'
+			},
+			component: PlatformNode
+		},
+		{
+			id: 'google-search',
+			position: { x: 500, y: 400 },
+			data: {
+				platformName: 'Google',
+				platformType: 'Search',
+				platformIcon: '🔍',
+				budget: 350,
+				budgetPercentage: 27,
+				impressions: 10200,
+				clicks: 765,
+				conversions: 45,
+				costPerClick: 0.46,
+				costPerConversion: 7.78,
+				mainColor: '#4285F4',
+				shadowColor: '#A4C2F4'
+			},
+			component: PlatformNode
+		},
+		{
+			id: 'email-channel',
+			position: { x: 1100, y: 300 },
+			data: {
+				platformName: 'Email',
+				platformType: 'Email',
+				platformIcon: '📧',
+				budget: 200,
+				budgetPercentage: 15,
+				impressions: 8500,
+				clicks: 340,
+				conversions: 42,
+				costPerClick: 0.59,
+				costPerConversion: 4.76,
+				mainColor: '#D54B3D',
+				shadowColor: '#F4A9A3'
+			},
+			component: PlatformNode
+		},
+		{
+			id: 'facebook-channel',
+			position: { x: 200, y: 600 },
+			data: {
+				platformName: 'Facebook',
+				platformType: 'Social',
+				platformIcon: '👥',
+				budget: 300,
+				budgetPercentage: 23,
+				impressions: 18500,
+				clicks: 925,
+				conversions: 37,
+				costPerClick: 0.32,
+				costPerConversion: 8.11,
+				mainColor: '#1877F2',
+				shadowColor: '#8BB9FE',
+				anchorDirection: 'east'
+			},
+			component: PlatformNode
+		}
+	]);
+
+	// Local state using $state
+	let isHovered = $state(false);
+
+	// Local state using $state
+	let isDrawerDisabled = $state(false);
+	let drawerOpen = $state(false);
+
+	// Function to check window width and disable drawer on larger screens
+	function checkWindowSize() {
+		const mdBreakpoint = 768; // Standard Tailwind md breakpoint
+		isDrawerDisabled = window.innerWidth >= mdBreakpoint;
+
+		// Close drawer if it's open and screen size becomes larger than md
+		if (isDrawerDisabled && drawerOpen) {
+			drawerOpen = false;
+		}
+	}
+
+	// Handle click on the node
+	function handleNodeClick() {
+		if (!isDrawerDisabled) {
+			drawerOpen = true;
+		}
+
+		// Always update settings panel regardless of drawer state
+		$settingsPanel = { id, type: 'table' };
+	}
+
+	onMount(() => {
+		// Initial check
+		checkWindowSize();
+
+		// Add resize listener
+		window.addEventListener('resize', checkWindowSize);
+
+		// Cleanup
+		return () => {
+			window.removeEventListener('resize', checkWindowSize);
+		};
+	});
 </script>
 
-<svelte:window bind:innerWidth bind:innerHeight />
+<svelte:window on:resize={checkWindowSize} bind:innerWidth bind:innerHeight />
 {#if loaded}
 	<Svelvet width={innerWidth} height={partialInnerHeight} fitView controls minimap>
 		<DbTable
@@ -41,102 +199,42 @@
 				{ field: 'mass', type: 'int', constraint: '' }
 			]}
 		/>
-		<!-- Weekend Special Campaign with red theme -->
-		<CampaignNode
-			id="weekend-special"
-			positionX={-400}
-			positionY={-200}
-			campaignName="Weekend Special"
-			campaignStatus="Active"
-			budget={1200}
-			impressions={45000}
-			clicks={2250}
-			conversions={180}
-			startDate="2025-03-15"
-			endDate="2025-04-15"
-			mainColor="#FF5252"
-			shadowColor="#FF9999"
-		/>
-
-		<!-- Instagram Platform -->
-		<PlatformNode
-			id="instagram-channel"
-			positionX={800}
-			positionY={200}
-			platformName="Instagram"
-			platformType="Social"
-			platformIcon="📸"
-			budget={450}
-			budgetPercentage={35}
-			impressions={22500}
-			clicks={1125}
-			conversions={90}
-			costPerClick={0.4}
-			costPerConversion={5.0}
-			mainColor="#E1306C"
-			shadowColor="#F5A3C7"
-		/>
-
-		<!-- Google Search Platform -->
-		<PlatformNode
-			id="google-search"
-			positionX={500}
-			positionY={400}
-			platformName="Google"
-			platformType="Search"
-			platformIcon="🔍"
-			budget={350}
-			budgetPercentage={27}
-			impressions={10200}
-			clicks={765}
-			conversions={45}
-			costPerClick={0.46}
-			costPerConversion={7.78}
-			mainColor="#4285F4"
-			shadowColor="#A4C2F4"
-		/>
-
-		<!-- Email Marketing Platform -->
-		<PlatformNode
-			id="email-channel"
-			positionX={1100}
-			positionY={300}
-			platformName="Email"
-			platformType="Email"
-			platformIcon="📧"
-			budget={200}
-			budgetPercentage={15}
-			impressions={8500}
-			clicks={340}
-			conversions={42}
-			costPerClick={0.59}
-			costPerConversion={4.76}
-			mainColor="#D54B3D"
-			shadowColor="#F4A9A3"
-		/>
-
-		<!-- Facebook Platform -->
-		<PlatformNode
-			id="facebook-channel"
-			positionX={200}
-			positionY={600}
-			platformName="Facebook"
-			platformType="Social"
-			platformIcon="👥"
-			budget={300}
-			budgetPercentage={23}
-			impressions={18500}
-			clicks={925}
-			conversions={37}
-			costPerClick={0.32}
-			costPerConversion={8.11}
-			mainColor="#1877F2"
-			shadowColor="#8BB9FE"
-			anchorDirection="east"
-		/>
+		<Drawer.Root bind:open={drawerOpen}>
+			{#each nodes as n, i}
+				<button onclick={handleNodeClick}>
+					<svelte:component this={n.component} {...n.data} position={n.position} id={i} />
+				</button>
+			{/each}
+			<Drawer.Content>
+				<div class="mx-auto w-full max-w-sm">
+					<Drawer.Header>
+						<Drawer.Title>Move Goal</Drawer.Title>
+						<Drawer.Description>Set your daily activity goal.</Drawer.Description>
+					</Drawer.Header>
+					<div class="p-4 pb-0">
+						<div class="flex items-center justify-center space-x-2">
+							<Button variant="outline" size="icon" class="h-8 w-8 shrink-0 rounded-full">
+								<span class="sr-only">Decrease</span>
+							</Button>
+							<div class="flex-1 text-center">
+								<div class="text-7xl font-bold tracking-tighter"></div>
+								<div class="text-[0.70rem] uppercase text-muted-foreground">Calories/day</div>
+							</div>
+						</div>
+						<div class="mt-3 h-[120px]"></div>
+					</div>
+					<Drawer.Footer>
+						<Button>Submit</Button>
+						<Drawer.Close asChild let:builder>
+							<Button builders={[builder]} variant="outline">Cancel</Button>
+						</Drawer.Close>
+					</Drawer.Footer>
+				</div>
+			</Drawer.Content>
+		</Drawer.Root>
 	</Svelvet>
 {/if}
 
-<!-- <ActivityPanel></ActivityPanel> -->
+<ActivityPanel></ActivityPanel>
 <CampaignPanel></CampaignPanel>
 <CreateButton></CreateButton>

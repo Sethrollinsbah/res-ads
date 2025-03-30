@@ -53,7 +53,7 @@
 	});
 </script>
 
-<div class="fixed bottom-0 right-4 z-10 w-80 rounded-t-lg bg-white shadow-lg ring-1 ring-black">
+<div class="fixed bottom-0 right-4 w-80 rounded-t-lg bg-white shadow-lg ring-1 ring-black">
 	<button class="flex w-full items-center justify-between p-4" onclick={togglePanel}>
 		{isOpen ? 'Close History' : 'Open History'}
 		{#if isOpen}

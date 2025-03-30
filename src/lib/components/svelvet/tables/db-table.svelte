@@ -1,7 +1,6 @@
 <script lang="ts">
 	import { Node, Anchor } from 'svelvet';
 	import * as Table from '$lib/components/ui/table';
-	import { settingsPanel } from '@/lib';
 
 	// Customizable properties using Svelte 5's $props()
 	let {
@@ -44,13 +43,7 @@
         "
 		onmouseenter={() => (isHovered = true)}
 		onmouseleave={() => (isHovered = false)}
-		onclick={() => {
-			$settingsPanel = true;
-		}}
 	>
-		<div class="anchor-point" style="top: {anchorTop}px; left: {anchorLeft}px;">
-			<Anchor output id="{id}_anchor1" direction={anchorDirection}></Anchor>
-		</div>
 		<div id="container">
 			<div
 				class="heading"

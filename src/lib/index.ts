@@ -1,3 +1,3 @@
 	import { writable } from 'svelte/store';
 
-export let settingsPanel = writable(false)
+export let settingsPanel = writable({id: null, type: null})

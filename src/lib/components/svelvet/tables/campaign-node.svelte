@@ -1,5 +1,5 @@
 <script lang="ts">
-	import { settingsPanel } from '@/lib';
+	import { settingsPanel } from '$lib';
 	import { Node, Anchor } from 'svelvet';
 
 	// Customizable properties using Svelte 5's $props()
@@ -62,9 +62,6 @@
         "
 		onmouseenter={() => (isHovered = true)}
 		onmouseleave={() => (isHovered = false)}
-		onclick={() => {
-			$settingsPanel = true;
-		}}
 	>
 		<div class="anchor-point" style="top: {anchorTop}px; left: {anchorLeft}px;">
 			<Anchor output id="{id}_anchor1" direction={anchorDirection}></Anchor>

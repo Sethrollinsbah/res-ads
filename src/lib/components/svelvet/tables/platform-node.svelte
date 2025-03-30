@@ -99,13 +99,9 @@
 		onmouseenter={() => (isHovered = true)}
 		onmouseleave={() => (isHovered = false)}
 		onclick={() => {
-			$settingsPanel = true;
+			$settingsPanel = { id, type: 'platform' };
 		}}
 	>
-		<div class="anchor-point" style="top: {anchorTop}px; left: {anchorLeft}px;">
-			<Anchor output id="{id}_anchor1" direction={anchorDirection}></Anchor>
-		</div>
-
 		<!-- Header -->
 		<div
 			class="platform-header"

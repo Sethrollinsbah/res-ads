@@ -7,26 +7,73 @@
 	import { Button } from '$lib/components/ui/button/index.js';
 	import { Input } from '$lib/components/ui/input/index.js';
 	import { Label } from '$lib/components/ui/label/index.js';
+	import Overview from './campaign-panel/overview.svelte';
+	import Settings from './campaign-panel/settings.svelte';
+	import { onMount } from 'svelte';
+
+	const campPanel = [
+		{
+			name: 'Overview',
+			code: 'overview'
+		},
+		{
+			name: 'Settings',
+			code: 'settings'
+		}
+	];
+
+	// Add state to track screen size
+	let isMdOrLarger = $state(false);
+
+	// Function to check screen size
+	function checkScreenSize() {
+		const mdBreakpoint = 768; // Standard Tailwind md breakpoint
+		isMdOrLarger = window.innerWidth >= mdBreakpoint;
+	}
+
+	onMount(() => {
+		// Initial check
+		checkScreenSize();
+
+		// Add resize listener
+		window.addEventListener('resize', checkScreenSize);
+
+		// Cleanup
+		return () => {
+			window.removeEventListener('resize', checkScreenSize);
+		};
+	});
 </script>
 
-{#if $settingsPanel}
+<svelte:window on:resize={checkScreenSize} />
+
+{#if isMdOrLarger && $settingsPanel.id !== null}
 	<div
 		class="fixed bottom-0 right-0 h-[80dvh] w-[60vw] rounded-tl-lg bg-white shadow-lg ring-1 ring-black"
-		transition:fly={{
-			x: 100,
-			y: 100,
-			duration: 300,
-			easing: quintOut,
-			css: (t) => `transform: translate(${t * 100}%, ${t * 100}%)`
-		}}
+		in:fly={isMdOrLarger
+			? {
+					x: 100,
+					y: 100,
+					duration: 300,
+					easing: quintOut
+				}
+			: { duration: 0 }}
+		out:fly={isMdOrLarger
+			? {
+					x: 100,
+					y: 100,
+					duration: 300,
+					easing: quintOut
+				}
+			: { duration: 0 }}
 	>
-		<Tabs.Root value="account" class="w-full">
-			<div class=" flex flex-row justify-between p-12">
-				<h1>Redis</h1>
+		<Tabs.Root value="overview" class="w-full">
+			<div class="flex flex-row justify-between p-12">
+				<h1>{$settingsPanel.id}</h1>
 				<button
 					class="flex w-full items-center justify-end"
 					onclick={() => {
-						$settingsPanel = false;
+						$settingsPanel = { id: null, type: null };
 					}}
 				>
 					<svg
@@ -41,80 +88,18 @@
 					</svg>
 				</button>
 			</div>
-			<Tabs.List class="grid w-full grid-cols-2">
-				<Tabs.Trigger value="overview">Overview</Tabs.Trigger>
-				<Tabs.Trigger value="settings">Settings</Tabs.Trigger>
+			<Tabs.List class="grid w-full grid-cols-2 bg-transparent">
+				{#each campPanel as s}
+					<Tabs.Trigger
+						class="border-red-500 text-primary/50 data-[state=active]:text-primary"
+						value={s.code}>{s.name}</Tabs.Trigger
+					>
+				{/each}
 			</Tabs.List>
 			<div class="overflow-y-auto border-t-[1px] border-accent px-12">
-				<Tabs.Content value="account">
-					<Card.Root>
-						<Card.Header>
-							<Card.Title>Account</Card.Title>
-							<Card.Description>
-								Make changes to your account here. Click save when you're done.
-							</Card.Description>
-						</Card.Header>
-						<Card.Content class="space-y-2">
-							<div class="space-y-1">
-								<Label for="name">Name</Label>
-								<Input id="name" value="Pedro Duarte" />
-							</div>
-							<div class="space-y-1">
-								<Label for="username">Username</Label>
-								<Input id="username" value="@peduarte" />
-							</div>
-						</Card.Content>
-						<Card.Footer>
-							<Button>Save changes</Button>
-						</Card.Footer>
-					</Card.Root>
-				</Tabs.Content>
-				<Tabs.Content value="password">
-					<Card.Root>
-						<Card.Header>
-							<Card.Title>Password</Card.Title>
-							<Card.Description>
-								Change your password here. After saving, you'll be logged out.
-							</Card.Description>
-						</Card.Header>
-						<Card.Content class="space-y-2">
-							<div class="space-y-1">
-								<Label for="current">Current password</Label>
-								<Input id="current" type="password" />
-							</div>
-							<div class="space-y-1">
-								<Label for="new">New password</Label>
-								<Input id="new" type="password" />
-							</div>
-						</Card.Content>
-						<Card.Footer>
-							<Button>Save password</Button>
-						</Card.Footer>
-					</Card.Root>
-				</Tabs.Content>
+				<Tabs.Content value="overview"><Overview></Overview></Tabs.Content>
+				<Tabs.Content value="settings"><Settings></Settings></Tabs.Content>
 			</div>
 		</Tabs.Root>
 	</div>
-{:else}
-	<button
-		class="fixed bottom-4 right-4 rounded-lg bg-white p-4 shadow-lg ring-1 ring-black"
-		onclick={() => {
-			$settingsPanel = true;
-		}}
-	>
-		<svg
-			xmlns="http://www.w3.org/2000/svg"
-			fill="none"
-			viewBox="0 0 24 24"
-			stroke-width="1.5"
-			stroke="currentColor"
-			class="h-6 w-6"
-		>
-			<path
-				stroke-linecap="round"
-				stroke-linejoin="round"
-				d="M3.75 12h16.5m-16.5 0a3.75 3.75 0 117.5 0 3.75 3.75 0 01-7.5 0z"
-			/>
-		</svg>
-	</button>
 {/if}
