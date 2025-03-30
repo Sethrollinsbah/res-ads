@@ -22,6 +22,7 @@
 	import { Input } from '$lib/components/ui/input/index.js';
 	import { Label } from '$lib/components/ui/label/index.js';
 	import * as DropdownMenu from '@/lib/components/ui/dropdown-menu';
+	import Notifications from '@/lib/components/header/notifications.svelte';
 
 	// Navigation state
 	let sidebarOpen = $state(false);
@@ -216,42 +217,7 @@
 			<div class="flex items-center space-x-3">
 				<div></div>
 
-				<div class="relative">
-					<Popover.Root portal={null}>
-						<Popover.Trigger asChild let:builder>
-							<Button builders={[builder]} size="icon" variant="ghost">
-								<Bell class="h-5 w-5" />
-								<span class="absolute right-1 top-1 h-2 w-2 rounded-full bg-red-500"></span></Button
-							>
-						</Popover.Trigger>
-						<Popover.Content class="absolute w-80 -translate-x-1/2">
-							<div class="grid gap-4">
-								<div class="space-y-2">
-									<h4 class="font-medium leading-none">Dimensions</h4>
-									<p class="text-sm text-muted-foreground">Set the dimensions for the layer.</p>
-								</div>
-								<div class="grid gap-2">
-									<div class="grid grid-cols-3 items-center gap-4">
-										<Label for="width">Width</Label>
-										<Input id="width" value="100%" class="col-span-2 h-8" />
-									</div>
-									<div class="grid grid-cols-3 items-center gap-4">
-										<Label for="maxWidth">Max. width</Label>
-										<Input id="maxWidth" value="300px" class="col-span-2 h-8" />
-									</div>
-									<div class="grid grid-cols-3 items-center gap-4">
-										<Label for="height">Height</Label>
-										<Input id="height" value="25px" class="col-span-2 h-8" />
-									</div>
-									<div class="grid grid-cols-3 items-center gap-4">
-										<Label for="maxHeight">Max. height</Label>
-										<Input id="maxHeight" value="none" class="col-span-2 h-8" />
-									</div>
-								</div>
-							</div>
-						</Popover.Content>
-					</Popover.Root>
-				</div>
+				<Notifications></Notifications>
 				<div class="relative flex items-center space-x-2">
 					<DropdownMenu.Root>
 						<DropdownMenu.Trigger asChild let:builder>
