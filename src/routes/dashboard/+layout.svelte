@@ -24,6 +24,7 @@
 	import * as DropdownMenu from '@/lib/components/ui/dropdown-menu';
 	import Notifications from '@/lib/components/header/notifications.svelte';
 	import ProjectSwitcher from '@/lib/components/header/project-switcher.svelte';
+	import { projectId, selectedProjectId } from '@/lib';
 
 	// Navigation state
 	let sidebarOpen = $state(false);
@@ -33,14 +34,18 @@
 	const isMobile = $derived(windowWidth < 768);
 	let overlayMode = $state(false);
 
-	// Navigation items
-	const navigationItems = [
-		{ icon: LayoutGrid, label: 'Dashboard', href: '/dash' },
-		{ icon: BarChart3, label: 'Analytics', href: '/dash/analytics' },
-		{ icon: PlusCircle, label: 'New Campaign', href: '/dash/new' },
-		{ icon: FileText, label: 'Campaigns', href: '/dash/campaigns' },
-		{ icon: Settings, label: 'Settings', href: '/dash/settings' }
-	];
+	// Navigation items with paths updated to include projectId
+	let navigationItems = $state([
+		{ icon: LayoutGrid, label: 'Dashboard', href: `/dashboard/${$selectedProjectId}` },
+		{ icon: BarChart3, label: 'Analytics', href: `/dashboard/${$selectedProjectId}/analytics` },
+		{
+			icon: PlusCircle,
+			label: 'New Campaign',
+			href: `?campaign=new`
+		},
+		{ icon: FileText, label: 'Campaigns', href: `/dashboard/${$selectedProjectId}/campaigns` },
+		{ icon: Settings, label: 'Settings', href: `/dashboard/${$selectedProjectId}/settings` }
+	]);
 
 	// Window resize handling
 	$effect(() => {
@@ -145,57 +150,6 @@
 
 <div class="flex h-screen w-full bg-gray-50">
 	<!-- Desktop Sidebar -->
-	<aside
-		class={cn(
-			'fixed inset-y-0 z-30 hidden w-64 flex-col border-r border-gray-200 bg-white shadow-sm transition-all duration-300 ease-in-out md:flex',
-			sidebarOpen ? 'left-0' : '-left-64'
-		)}
-	>
-		<!-- Sidebar Header -->
-		<div class="flex h-16 items-center border-b border-gray-200 px-6">
-			<Logo scale="scale-50" />
-		</div>
-
-		<!-- Navigation Links -->
-		<nav class="flex-1 overflow-y-auto px-4 py-6">
-			<ul class="space-y-1">
-				{#each navigationItems as item}
-					<li>
-						<a
-							href={item.href}
-							class="flex items-center rounded-lg px-4 py-3 text-gray-700 transition-colors hover:bg-gray-100"
-						>
-							<svelte:component this={item.icon} class="mr-3 h-5 w-5 text-gray-500" />
-							<span>{item.label}</span>
-						</a>
-					</li>
-				{/each}
-			</ul>
-
-			<div class="my-6 border-t border-gray-200"></div>
-
-			<ul class="space-y-1">
-				<li>
-					<a
-						href="/dash/help"
-						class="flex items-center rounded-lg px-4 py-3 text-gray-700 transition-colors hover:bg-gray-100"
-					>
-						<HelpCircle class="mr-3 h-5 w-5 text-gray-500" />
-						<span>Help & Support</span>
-					</a>
-				</li>
-				<li>
-					<a
-						href="/auth/logout"
-						class="flex items-center rounded-lg px-4 py-3 text-red-600 transition-colors hover:bg-red-50"
-					>
-						<LogOut class="mr-3 h-5 w-5 text-red-500" />
-						<span>Log Out</span>
-					</a>
-				</li>
-			</ul>
-		</nav>
-	</aside>
 
 	<!-- Main content container -->
 	<div

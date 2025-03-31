@@ -7,9 +7,10 @@
 	import * as Dialog from '$lib/components/ui/dialog/index.js';
 	import * as RadioGroup from '$lib/components/ui/radio-group/index.js';
 	import * as Select from '$lib/components/ui/select/index.js';
-	import { onMount } from 'svelte';
+	import { onMount, onDestroy } from 'svelte';
 	import { goto } from '$app/navigation';
 	import { page } from '$app/stores';
+	import { browser } from '$app/environment';
 
 	// Import projects from the specified location
 	import { projects, selectedProjectId } from '@/lib';
@@ -20,16 +21,16 @@
 		name: string;
 	};
 
-	// Current project ID state - change null to undefined to match expected types
+	// Current project ID state using Svelte 5's $state
 	let position = $state<string | undefined>($page.params.projectId || undefined);
 	let dialogOpen = $state(false);
 	let projectName = $state('');
 	let creationType = $state('fresh'); // 'fresh' or 'duplicate'
 
-	// Fix: Explicitly define the type for availableProjects
+	// Available projects list using Svelte 5's $state
 	let availableProjects = $state<Project[]>([]);
 
-	// Create a derived value for available projects using $effect
+	// Create a derived value for available projects
 	$effect(() => {
 		availableProjects = $projects.map((project) => ({
 			id: project.id,
@@ -44,9 +45,8 @@
 		{ id: 'project3', name: 'Marketing Campaign' }
 	];
 
-	// Check if selectedProjectId matches URL param or exists
+	// Check if selectedProjectId matches URL param
 	$effect(() => {
-		// Update projectId to undefined if the parameter doesn't exist
 		const urlProjectId = $page.params.projectId || '';
 
 		// Only update if they're different to avoid unnecessary state changes
@@ -54,37 +54,117 @@
 			$selectedProjectId = urlProjectId;
 			position = urlProjectId || undefined;
 
-			// If the URL has a project ID, log that we're selecting it
 			if (urlProjectId) {
 				console.log(`Setting selected project ID to ${urlProjectId} from URL params`);
 			}
 		}
 	});
 
-	// Watch for changes in the page params and update the projectId
+	// Watch for changes in the page params
 	$effect(() => {
-		// Update projectId to undefined if the parameter doesn't exist
 		$selectedProjectId = $page.params.projectId || '';
 		position = $page.params.projectId || undefined;
 	});
 
-	// Handle keyboard shortcut
+	// Check for campaign parameter and open dialog if needed
+	function checkCampaignParam() {
+		if (!browser) return;
+
+		const url = new URL(window.location.href);
+		const campaignParam = url.searchParams.get('campaign');
+
+		if (campaignParam === 'new' && !dialogOpen) {
+			dialogOpen = true;
+		}
+	}
+
+	// Clean up URL when dialog closes
+	$effect(() => {
+		if (browser && !dialogOpen) {
+			const url = new URL(window.location.href);
+			if (url.searchParams.has('campaign')) {
+				url.searchParams.delete('campaign');
+				window.history.replaceState({}, '', url.toString());
+			}
+		}
+	});
+
+	// Create a function to set up URL change monitoring
+	function setupUrlChangeListener() {
+		if (!browser) return;
+
+		// Original methods for cleanup
+		const originalPushState = window.history.pushState;
+		const originalReplaceState = window.history.replaceState;
+
+		// Custom event handler
+		const handleUrlChange = () => checkCampaignParam();
+
+		// Override pushState
+		window.history.pushState = function () {
+			const result = originalPushState.apply(this, arguments);
+			window.dispatchEvent(new Event('pushstate'));
+			handleUrlChange();
+			return result;
+		};
+
+		// Override replaceState
+		window.history.replaceState = function () {
+			const result = originalReplaceState.apply(this, arguments);
+			window.dispatchEvent(new Event('replacestate'));
+			handleUrlChange();
+			return result;
+		};
+
+		// Listen for popstate (back/forward navigation)
+		window.addEventListener('popstate', handleUrlChange);
+
+		// Listen for our custom events
+		window.addEventListener('pushstate', handleUrlChange);
+		window.addEventListener('replacestate', handleUrlChange);
+		window.addEventListener('urlchange', handleUrlChange);
+
+		// Return cleanup function
+		return () => {
+			window.removeEventListener('popstate', handleUrlChange);
+			window.removeEventListener('pushstate', handleUrlChange);
+			window.removeEventListener('replacestate', handleUrlChange);
+			window.removeEventListener('urlchange', handleUrlChange);
+			window.history.pushState = originalPushState;
+			window.history.replaceState = originalReplaceState;
+		};
+	}
+
+	// Set up listeners on mount and initial URL check
+	let cleanup = $state(() => {});
+
 	onMount(() => {
+		// Set up keyboard shortcut
 		const handleKeyDown = (e: KeyboardEvent) => {
-			// Check for Ctrl+N (works on all platforms)
 			if ((e.key === 'n' || e.key === 'N') && e.ctrlKey) {
 				e.preventDefault();
 				dialogOpen = true;
 			}
 		};
 		window.addEventListener('keydown', handleKeyDown);
+
+		// Set up URL change monitoring
+		cleanup = setupUrlChangeListener();
+
+		// Initial check
+		checkCampaignParam();
+
 		return () => {
 			window.removeEventListener('keydown', handleKeyDown);
 		};
 	});
 
+	// Clean up URL listeners when component is destroyed
+	onDestroy(() => {
+		if (cleanup) cleanup();
+	});
+
 	function handleCreateProject() {
-		// TODO: Add your project creation logic here
 		if (creationType === 'fresh') {
 			console.log(`Creating new project: ${projectName}`);
 			// Add the new project to the state
@@ -103,7 +183,6 @@
 
 			$selectedProjectId = newProject.id;
 		} else {
-			// console.log(`Duplicating project ${selectedProjectId} as: ${projectName}`);
 			// Clone the selected project with a new ID and name
 			const newProject = { id: `project-${Date.now()}`, name: projectName };
 			$projects = [...$projects, newProject];
