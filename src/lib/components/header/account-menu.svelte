@@ -48,17 +48,17 @@
 		<DropdownMenu.Separator />
 
 		{#each navigationItems as ni}
-			<DropdownMenu.Item>
+			<DropdownMenu.Item href={ni.href}>
 				<svelte:component this={ni.icon} class="mr-2 h-4 w-4"></svelte:component>
 				<span>{ni.label}</span>
 			</DropdownMenu.Item>
 		{/each}
 		<DropdownMenu.Separator />
-		<DropdownMenu.Item class="">
+		<DropdownMenu.Item class="" href={'/help-center'}>
 			<HelpCircle class="mr-2 h-4 w-4" />
 			<span>Help & Support</span>
 		</DropdownMenu.Item>
-		<DropdownMenu.Item class="text-red-600">
+		<DropdownMenu.Item class="text-red-600" href={'/api/logout'}>
 			<LogOut class="mr-2 h-4 w-4" />
 			<span>Logout</span>
 		</DropdownMenu.Item>
