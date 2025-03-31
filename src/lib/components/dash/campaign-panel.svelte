@@ -85,7 +85,7 @@
 				<button
 					class="flex w-full items-center justify-end"
 					onclick={() => {
-						$settingsPanel = { id: null, type: null, icon: null };
+						$settingsPanel = { id: null, type: null, icon: null, data: null };
 					}}
 				>
 					<svg

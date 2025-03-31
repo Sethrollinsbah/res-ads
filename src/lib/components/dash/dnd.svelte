@@ -49,6 +49,7 @@
 			<svelte:component
 				this={node.component}
 				{...node.data}
+				data={node.data}
 				position={node.position}
 				id={node.id}
 			/>

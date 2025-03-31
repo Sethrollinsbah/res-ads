@@ -44,11 +44,11 @@
 
 	// Function to create a new table
 	function createNewTable(tableType: string) {
-		const tableData: Record<string, any> = {
+		const schema: Record<string, any> = {
 			'customers': {
 				headingText: 'Customers',
 				headingColor: '#4285F4',
-				tableData: [
+				schema: [
 					{ field: 'id', type: 'bigint', constraint: 'autoincrement()' },
 					{ field: 'name', type: 'varchar', constraint: 'not null' },
 					{ field: 'email', type: 'varchar', constraint: 'not null' },
@@ -60,7 +60,7 @@
 			'menu-items': {
 				headingText: 'Menu Items',
 				headingColor: '#FF5252',
-				tableData: [
+				schema: [
 					{ field: 'id', type: 'bigint', constraint: 'autoincrement()' },
 					{ field: 'name', type: 'varchar', constraint: 'not null' },
 					{ field: 'category', type: 'varchar', constraint: 'not null' },
@@ -72,7 +72,7 @@
 			'orders': {
 				headingText: 'Orders',
 				headingColor: '#FBBC05',
-				tableData: [
+				schema: [
 					{ field: 'id', type: 'bigint', constraint: 'autoincrement()' },
 					{ field: 'customer_id', type: 'bigint', constraint: 'not null' },
 					{ field: 'order_date', type: 'timestamp', constraint: 'not null' },
@@ -84,7 +84,7 @@
 			'campaigns': {
 				headingText: 'Campaigns',
 				headingColor: '#34A853',
-				tableData: [
+				schema: [
 					{ field: 'id', type: 'bigint', constraint: 'autoincrement()' },
 					{ field: 'name', type: 'varchar', constraint: 'not null' },
 					{ field: 'start_date', type: 'date', constraint: 'not null' },
@@ -96,7 +96,7 @@
 			'reservations': {
 				headingText: 'Reservations',
 				headingColor: '#E1306C',
-				tableData: [
+				schema: [
 					{ field: 'id', type: 'bigint', constraint: 'autoincrement()' },
 					{ field: 'customer_id', type: 'bigint', constraint: 'not null' },
 					{ field: 'reservation_date', type: 'timestamp', constraint: 'not null' },
@@ -107,10 +107,10 @@
 			}
 		};
 
-		const tableConfig = tableData[tableType] || {
+		const tableConfig = schema[tableType] || {
 			headingText: 'New Table',
 			headingColor: '#4285F4',
-			tableData: [
+			schema: [
 				{ field: 'id', type: 'bigint', constraint: 'autoincrement()' },
 				{ field: 'name', type: 'varchar', constraint: 'not null' },
 				{ field: 'created_at', type: 'timestamp', constraint: 'not null' }

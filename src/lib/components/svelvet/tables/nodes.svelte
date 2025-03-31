@@ -5,6 +5,7 @@
 
 	let {
 		type = 'campaign',
+		data,
 		campaignId = 'weekend-special',
 		campaignPositionX = -400,
 		campaignPositionY = -200,
@@ -42,8 +43,6 @@
 		tableShadowColor = '#99C9FF',
 		tableData = [
 			{ field: 'id', type: 'bigint', constraint: 'autoincrement()' },
-			{ field: 'name', type: 'varchar', constraint: 'not null' },
-			{ field: 'height', type: 'int', constraint: '' },
 			{ field: 'mass', type: 'int', constraint: '' }
 		]
 	} = $props();
@@ -93,5 +92,6 @@
 		borderColor={tableBorderColor}
 		shadowColor={tableShadowColor}
 		{tableData}
+		{data}
 	/>
 {/if}

@@ -23,6 +23,7 @@
 	import { Label } from '$lib/components/ui/label/index.js';
 	import * as DropdownMenu from '@/lib/components/ui/dropdown-menu';
 	import Notifications from '@/lib/components/header/notifications.svelte';
+	import ProjectSwitcher from '@/lib/components/header/project-switcher.svelte';
 
 	// Navigation state
 	let sidebarOpen = $state(false);
@@ -211,7 +212,9 @@
 				<Button variant="ghost" size="icon" class="mr-2 " on:click={toggleSidebar}>
 					<Menu class="h-6 w-6" />
 				</Button>
-				<h1 class="hidden text-xl font-semibold md:block">Restaurant Ad Dashboard</h1>
+				<a href="/projects" class="hidden text-sm font-light md:block">ResAds</a>
+				<span class="mx-2 text-sm font-light">/</span>
+				<ProjectSwitcher></ProjectSwitcher>
 			</div>
 
 			<div class="flex items-center space-x-3">

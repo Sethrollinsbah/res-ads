@@ -37,6 +37,11 @@ export function initializeDefaultNodes(): void {
         { field: 'name', type: 'varchar', constraint: 'not null' },
         { field: 'height', type: 'int', constraint: '' },
         { field: 'mass', type: 'int', constraint: '' }
+      ],
+      schema: [
+        { field: 'name', type: 'varchar', constraint: 'not null' },
+        { field: 'height', type: 'int', constraint: '' },
+        { field: 'mass', type: 'int', constraint: '' }
       ]
     }
   };

@@ -69,24 +69,24 @@
 	};
 
 	// Sample table data for database visualization
-	const tableData = {
+	let tableData = $state({
 		name: 'Customers',
 		rowCount: 2458,
 		columnCount: 8,
 		lastUpdated: '2025-03-28',
 		size: '4.2MB',
-		schema: [
-			{ name: 'id', type: 'bigint', constraint: 'PRIMARY KEY' },
-			{ name: 'name', type: 'varchar', constraint: 'NOT NULL' },
-			{ name: 'email', type: 'varchar', constraint: 'UNIQUE' },
-			{ name: 'phone', type: 'varchar', constraint: '' },
-			{ name: 'created_at', type: 'timestamp', constraint: 'NOT NULL' }
-		],
+		schema:
+			$settingsPanel.data && $settingsPanel.data.schema
+				? $settingsPanel.data.schema
+				: [
+						{ field: 'id', type: 'bigint', constraint: 'PRIMARY KEY' },
+						{ field: 'name', type: 'varchar', constraint: 'NOT NULL' }
+					],
 		sampleQueries: [
 			'SELECT * FROM customers WHERE created_at > NOW() - INTERVAL 7 DAYS',
 			'SELECT COUNT(*) FROM customers GROUP BY EXTRACT(MONTH FROM created_at)'
 		]
-	};
+	});
 
 	// Format numbers
 	function formatNumber(num: number): string {
@@ -569,7 +569,7 @@
 							{#each tableData.schema as column}
 								<tr>
 									<td class="whitespace-nowrap px-6 py-4 text-sm font-medium text-gray-900">
-										{column.name}
+										{column.field}
 									</td>
 									<td class="whitespace-nowrap px-6 py-4 text-sm text-gray-500">
 										{column.type}

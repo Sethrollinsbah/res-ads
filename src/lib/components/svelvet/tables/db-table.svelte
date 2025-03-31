@@ -11,22 +11,14 @@
 		headingText = 'Films',
 		headingColor = '#FF5252',
 		borderColor = '#000000',
-		anchorDirection = 'west',
 		tableData = [
-			{ field: 'id', type: 'bigint', constraint: 'autoincrement()' },
-			{ field: 'title', type: 'varchar', constraint: 'not null' },
-			{ field: 'episode_id', type: 'varchar', constraint: 'not null' },
-			{ field: 'opening_crawl', type: 'varchar', constraint: 'not null' },
-			{ field: 'director', type: 'varchar', constraint: 'not null' },
-			{ field: 'producer', type: 'varchar', constraint: 'not null' },
-			{ field: 'release_date', type: 'date', constraint: 'not null' }
+			// { field: 'id', type: 'bigint', constraint: 'autoincrement()' },
 		],
-		anchorTop = 52,
-		anchorLeft = -16,
 		cellWidth = 70,
 		cellPadding = 10,
 		backgroundColor = '#FFFFFF',
-		shadowColor = '#000000'
+		shadowColor = '#000000',
+		data
 	} = $props();
 
 	// Local state using $state
@@ -68,7 +60,7 @@
 		onmouseup={(e) => {
 			// Only open settings panel if not dragging
 			if (!isDragging) {
-				settingsPanel.set({ id, type: 'table' });
+				settingsPanel.set({ id, type: 'table', data });
 			}
 		}}
 		ontouchstart={(e) => {
@@ -102,7 +94,7 @@
 
 			<Table.Root id="{id}Table" class="db-table">
 				<Table.Body>
-					{#each tableData as row}
+					{#each data.schema as row}
 						<Table.Row>
 							<Table.Cell
 								style="

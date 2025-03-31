@@ -44,8 +44,8 @@
 	},
 	"dependencies": {
 		"chart.js": "^4.4.8",
+		"date-fns": "^4.1.0",
 		"lucide": "^0.484.0",
-		"recharts": "^2.15.1",
 		"svelvet": "^11.0.5"
 	}
 }
