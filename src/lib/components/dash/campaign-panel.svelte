@@ -71,50 +71,54 @@
 			easing: quintOut
 		}}
 	>
-		<Tabs.Root value="overview" class="w-full">
-			<div class=" flex w-full flex-row justify-between p-12">
-				<div class="flex w-full flex-row">
-					<ApprovedLogos int={$settingsPanel.type}></ApprovedLogos>
-					<div class="w-full">
-						<h2 class="w-full text-2xl font-bold capitalize">
-							{$settingsPanel.id.split('---')[1] ?? $settingsPanel.id}
-						</h2>
-						<Badge class="capitalize" variant="outline">{$settingsPanel.type}</Badge>
+		<div class="relative h-full w-full overflow-y-auto">
+			<Tabs.Root value="overview" class=" sticky w-full">
+				<div class="sticky top-0 flex w-full flex-col justify-between bg-background pb-4 pt-12">
+					<div class="flex h-fit w-full flex-row px-12">
+						<ApprovedLogos int={$settingsPanel.type}></ApprovedLogos>
+						<div class="w-full">
+							<h2 class="w-full text-2xl font-bold capitalize">
+								{$settingsPanel.id.split('---')[1] ?? $settingsPanel.id}
+							</h2>
+							<Badge class="capitalize" variant="outline">{$settingsPanel.type}</Badge>
+						</div>
+						<div>
+							<button
+								class=" flex w-6 items-center justify-end"
+								onclick={() => {
+									$settingsPanel = { id: null, type: null, icon: null, data: null };
+								}}
+							>
+								<svg
+									xmlns="http://www.w3.org/2000/svg"
+									fill="none"
+									viewBox="0 0 24 24"
+									stroke-width="1.5"
+									stroke="currentColor"
+									class="h-6 w-6"
+								>
+									<path stroke-linecap="round" stroke-linejoin="round" d="M6 18L18 6M6 6l12 12" />
+								</svg>
+							</button>
+						</div>
 					</div>
+					<Tabs.List class="flex w-full flex-row justify-start bg-transparent px-12">
+						{#each campPanel as s}
+							<Tabs.Trigger
+								class="border-red-500 text-primary/50 data-[state=active]:text-primary "
+								value={s.name.toLowerCase()}>{s.name}</Tabs.Trigger
+							>
+						{/each}
+					</Tabs.List>
 				</div>
-				<button
-					class="flex w-full items-center justify-end"
-					onclick={() => {
-						$settingsPanel = { id: null, type: null, icon: null, data: null };
-					}}
-				>
-					<svg
-						xmlns="http://www.w3.org/2000/svg"
-						fill="none"
-						viewBox="0 0 24 24"
-						stroke-width="1.5"
-						stroke="currentColor"
-						class="h-6 w-6"
-					>
-						<path stroke-linecap="round" stroke-linejoin="round" d="M6 18L18 6M6 6l12 12" />
-					</svg>
-				</button>
-			</div>
-			<Tabs.List class="flex w-full flex-row justify-start bg-transparent px-12">
-				{#each campPanel as s}
-					<Tabs.Trigger
-						class="border-red-500 text-primary/50 data-[state=active]:text-primary "
-						value={s.name.toLowerCase()}>{s.name}</Tabs.Trigger
-					>
-				{/each}
-			</Tabs.List>
-			<div class="overflow-y-auto border-t-[1px] border-accent px-12">
-				{#each campPanel as s}
-					<Tabs.Content value={s.name.toLowerCase()}
-						><svelte:component this={s.code}></svelte:component></Tabs.Content
-					>
-				{/each}
-			</div>
-		</Tabs.Root>
+				<div class="overflow-y-auto border-t-[1px] border-accent px-12">
+					{#each campPanel as s}
+						<Tabs.Content value={s.name.toLowerCase()}
+							><svelte:component this={s.code}></svelte:component></Tabs.Content
+						>
+					{/each}
+				</div>
+			</Tabs.Root>
+		</div>
 	</div>
 {/if}

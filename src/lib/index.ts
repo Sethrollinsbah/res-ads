@@ -87,3 +87,9 @@ export let projects = writable<{id: string, name: String}[]>([
 			])
 export 	let selectedProjectId = writable<String>("planetbun")
 
+
+export let userEx = {
+	id: "123",
+	projects: [""]
+}
+
