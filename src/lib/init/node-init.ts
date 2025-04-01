@@ -5,9 +5,9 @@ import { addNode } from '$lib/stores/node-store';
 import type { TableNode, CampaignNode, PlatformNode } from '$lib/types/node-types';
 
 // Import the components
-import DbTable from '$lib/components/svelvet/tables/db-table.svelte';
-import CampaignNode from '$lib/components/svelvet/tables/campaign-node.svelte';
-import PlatformNode from '$lib/components/svelvet/tables/platform-node.svelte';
+import DbTable from '$lib/components/svelvet/nodes/db-table.svelte';
+import CampaignNode from '$lib/components/svelvet/nodes/campaign-node.svelte';
+import PlatformNode from '$lib/components/svelvet/nodes/platform-node.svelte';
 
 /**
  * Register all node components

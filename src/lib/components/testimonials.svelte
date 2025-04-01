@@ -1,5 +1,6 @@
 <script lang="ts">
 	import { siteContent } from '$lib/data/site-content';
+	import TestimonialCard from './testimonial-card.svelte';
 
 	const { testimonials } = siteContent;
 </script>
@@ -14,24 +15,12 @@
 
 		<div class="grid gap-8 md:grid-cols-3">
 			{#each testimonials.items as testimonial, i}
-				<div
-					class="relative rounded-lg border-4 border-black bg-white p-8 shadow-[8px_8px_0px_0px_rgba(0,0,0,1)] {i ===
-					1
-						? 'md:mt-8'
-						: ''}"
-				>
-					<div class="mb-6 text-5xl">⭐⭐⭐⭐⭐</div>
-					<p class="mb-6 italic">
-						"{testimonial.quote}"
-					</p>
-					<div class="flex items-center">
-						<div class="mr-4 h-12 w-12 rounded-full border-2 border-black bg-gray-300"></div>
-						<div>
-							<div class="font-bold">{testimonial.name}</div>
-							<div>{testimonial.company}</div>
-						</div>
-					</div>
-				</div>
+				<TestimonialCard
+					quote={testimonial.quote}
+					name={testimonial.name}
+					company={testimonial.company}
+					index={i}
+				/>
 			{/each}
 		</div>
 	</div>
