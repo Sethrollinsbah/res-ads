@@ -1,5 +1,5 @@
-// src/lib/init/node-init.ts
-
+// Import necessary dependencies and data
+import { projectId, projects } from '@/lib';
 import { registerNodeComponent } from '$lib/registry/node-registry';
 import { addNode } from '$lib/stores/node-store';
 import type { TableNode, CampaignNode, PlatformNode } from '$lib/types/node-types';
@@ -19,38 +19,48 @@ export function registerComponents(): void {
 }
 
 /**
- * Initialize the default nodes
+ * Initialize the default nodes based on project data from the store
  */
 export function initializeDefaultNodes(): void {
-  // Table node
-  const peopleTable: Omit<TableNode, 'component'> = {
-    id: 'people',
+  // Get current project ID and corresponding project data
+  const currentProjectId = get(projectId);
+  const projectsData = get(projects);
+  const currentProject = projectsData.find(p => p.id === currentProjectId) || projectsData[0];
+  
+  // Table nodes - use selected project's database table
+  const customersTable: Omit<TableNode, 'component'> = {
+    id: 'customers',
     type: 'table',
     position: { x: -300, y: -300 },
     data: {
-      headingText: 'People',
+      headingText: 'Customers',
       headingColor: '#4285F4',
       borderColor: '#000000',
       shadowColor: '#99C9FF',
       tableData: [
         { field: 'id', type: 'bigint', constraint: 'autoincrement()' },
         { field: 'name', type: 'varchar', constraint: 'not null' },
-        { field: 'height', type: 'int', constraint: '' },
-        { field: 'mass', type: 'int', constraint: '' }
+        { field: 'email', type: 'varchar', constraint: 'not null' },
+        { field: 'phone', type: 'varchar', constraint: '' },
+        { field: 'created_at', type: 'timestamp', constraint: 'not null' },
+        { field: 'last_order', type: 'timestamp', constraint: '' }
       ],
       schema: [
+        { field: 'id', type: 'bigint', constraint: 'autoincrement()' },
         { field: 'name', type: 'varchar', constraint: 'not null' },
-        { field: 'height', type: 'int', constraint: '' },
-        { field: 'mass', type: 'int', constraint: '' }
+        { field: 'email', type: 'varchar', constraint: 'not null' },
+        { field: 'phone', type: 'varchar', constraint: '' },
+        { field: 'created_at', type: 'timestamp', constraint: 'not null' },
+        { field: 'last_order', type: 'timestamp', constraint: '' }
       ]
     }
   };
   
-  // Campaign node
+  // Campaign nodes - use data from the current project if available
   const weekendSpecial: Omit<CampaignNode, 'component'> = {
     id: 'weekend-special',
     type: 'campaign',
-    position: { x: -400, y: -200 },
+    position: { x: 100, y: 100 },
     data: {
       campaignName: 'Weekend Special',
       campaignStatus: 'Active',
@@ -65,11 +75,29 @@ export function initializeDefaultNodes(): void {
     }
   };
   
-  // Platform nodes
+  const happyHourPromo: Omit<CampaignNode, 'component'> = {
+    id: 'happy-hour',
+    type: 'campaign',
+    position: { x: 100, y: 300 },
+    data: {
+      campaignName: 'Happy Hour Promo',
+      campaignStatus: 'Scheduled',
+      budget: 800,
+      impressions: 18000,
+      clicks: 950,
+      conversions: 85,
+      startDate: '2025-04-01',
+      endDate: '2025-04-30',
+      mainColor: '#FBBC05',
+      shadowColor: '#FFDE99'
+    }
+  };
+  
+  // Platform nodes - common marketing platforms for restaurants
   const instagramChannel: Omit<PlatformNode, 'component'> = {
     id: 'instagram-channel',
     type: 'platform',
-    position: { x: 800, y: 200 },
+    position: { x: 500, y: 100 },
     data: {
       platformName: 'Instagram',
       platformType: 'Social',
@@ -89,7 +117,7 @@ export function initializeDefaultNodes(): void {
   const googleSearch: Omit<PlatformNode, 'component'> = {
     id: 'google-search',
     type: 'platform',
-    position: { x: 500, y: 400 },
+    position: { x: 500, y: 300 },
     data: {
       platformName: 'Google',
       platformType: 'Search',
@@ -106,30 +134,10 @@ export function initializeDefaultNodes(): void {
     }
   };
   
-  const emailChannel: Omit<PlatformNode, 'component'> = {
-    id: 'email-channel',
-    type: 'platform',
-    position: { x: 1100, y: 300 },
-    data: {
-      platformName: 'Email',
-      platformType: 'Email',
-      platformIcon: '📧',
-      budget: 200,
-      budgetPercentage: 15,
-      impressions: 8500,
-      clicks: 340,
-      conversions: 42,
-      costPerClick: 0.59,
-      costPerConversion: 4.76,
-      mainColor: '#D54B3D',
-      shadowColor: '#F4A9A3'
-    }
-  };
-  
   const facebookChannel: Omit<PlatformNode, 'component'> = {
     id: 'facebook-channel',
     type: 'platform',
-    position: { x: 200, y: 600 },
+    position: { x: 500, y: 500 },
     data: {
       platformName: 'Facebook',
       platformType: 'Social',
@@ -147,11 +155,11 @@ export function initializeDefaultNodes(): void {
   };
   
   // Add all nodes to the store
-  addNode(peopleTable);
+  addNode(customersTable);
   addNode(weekendSpecial);
+  addNode(happyHourPromo);
   addNode(instagramChannel);
   addNode(googleSearch);
-  addNode(emailChannel);
   addNode(facebookChannel);
 }
 
