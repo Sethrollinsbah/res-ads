@@ -6,7 +6,7 @@
 	// Import Drawer components
 	import * as Drawer from '$lib/components/ui/drawer';
 	// Import types
-	import type { CampaignSettings } from './dashboard-types';
+	import type { CampaignSettings } from '@/lib/types/dashboard-types';
 	// Icons
 	import { Rocket, RefreshCw, X } from 'lucide-svelte';
 
